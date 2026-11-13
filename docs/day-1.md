@@ -33,16 +33,15 @@ The capitalization is not what makes a type primitive or a class; it is a naming
 
 **Status: JDK 21 and Maven are successfully configured.** Verified in a fresh Windows PowerShell 5.1 session.
 
-- `JAVA_HOME`: `C:\Program Files\Eclipse Adoptium\jdk-21.0.13.9-hotspot`
-- `where.exe java`: JDK 21 `bin\java.exe` is the first match. The Oracle Java 8 launcher appears second and does not take priority.
-- `where.exe javac`: JDK 21 `bin\javac.exe`.
+- `JAVA_HOME`: `C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.13.9-hotspot`
+- `where.exe java`: JDK 21 `bin\\java.exe` is the first match. The Oracle Java 8 launcher appears second and does not take priority.
+- `where.exe javac`: JDK 21 `bin\\javac.exe`.
 - `java -version`: OpenJDK 21.0.13 LTS (Eclipse Temurin).
 - `javac -version`: `javac 21.0.13`.
 - `mvn -version`: Apache Maven 3.6.3, running on Java 21.0.13.
 - Environment: Windows 11, 64-bit, PowerShell 5.1.
 
 **Conclusion:** The Java runtime, compiler, and Maven all use Java 21. Java 8 can remain installed because Java 21 resolves first on PATH.
-
 
 ### Writing and running your first Java program
 
@@ -60,8 +59,8 @@ public class HelloJava {
 Compile and run from the repository root in PowerShell:
 
 ```powershell
-javac src\day-1\HelloJava.java
-java -cp src\day-1 HelloJava
+javac src\\day-1\\HelloJava.java
+java -cp src\\day-1 HelloJava
 ```
 
 Expected output:
@@ -91,6 +90,97 @@ Compilation creates `HelloJava.class` (Java bytecode). The Java launcher starts 
 #### Q7. Why do we run the class name instead of the .class filename?
 
 **Answer:** The launcher expects the class name, not a filename. For example, use `java -cp src/day-1 HelloJava`, not `java HelloJava.class`. The classpath (`-cp`) tells Java where the class file is located.
+
+### Lesson 3 — Variables and data types
+
+A variable is a named place to store a value. Java is statically typed, so each variable has a type that is checked by the compiler.
+
+JavaScript:
+
+```javascript
+let temperature = 28.5;
+let deviceName = "Sensor-01";
+let isActive = true;
+```
+
+Java:
+
+```java
+double temperature = 28.5;
+String deviceName = "Sensor-01";
+boolean isActive = true;
+```
+
+The declared type stays fixed. For example, assigning `"Hot"` to a `double` variable is a compile-time error.
+
+#### Java's eight primitive types
+
+| Type | Example | Typical use |
+|---|---|---|
+| `byte` | `byte level = 100;` | Small-range integer |
+| `short` | `short count = 1000;` | Short-range integer |
+| `int` | `int deviceId = 101;` | Whole numbers |
+| `long` | `long timestamp = 9876543210L;` | Large whole numbers |
+| `float` | `float voltage = 3.3f;` | Decimal with less precision |
+| `double` | `double temperature = 28.5;` | Decimal (usual default) |
+| `char` | `char grade = 'A';` | Single UTF-16 code unit |
+| `boolean` | `boolean isActive = true;` | True/false |
+
+`String` is not primitive; it is a class (reference type) used for text.
+
+#### Declaration, initialization and reassignment
+
+```java
+int deviceId;       // declaration
+deviceId = 101;     // initialization
+deviceId = 102;     // reassignment
+```
+
+You can also declare and initialize in one statement: `int deviceId = 101;`.
+
+#### What does `var` mean in Java?
+
+Since Java 10, `var` can be used for local variable type inference:
+
+```java
+var temperature = 28.5;  // inferred as double
+var deviceName = "Sensor-01"; // inferred as String
+```
+
+This is not dynamic typing. The compiler infers the type once, and the variable remains that type. `var` is limited to local variables with an initializer; it is not a replacement for declaring types everywhere.
+
+#### Practice — model a device
+
+Create a small program or add these variables to `HelloJava`, then print each value:
+
+```java
+int deviceId = 101;
+String deviceName = "Boiler-Sensor-01";
+double temperature = 28.5;
+boolean isActive = true;
+
+System.out.println(deviceId);
+System.out.println(deviceName);
+System.out.println(temperature);
+System.out.println(isActive);
+```
+
+**Expected output:**
+
+```text
+101
+Boiler-Sensor-01
+28.5
+true
+```
+
+#### Q8. What is the difference between declaration and initialization?
+
+**Answer:** Declaration introduces a variable and its type (for example, `int deviceId;`). Initialization gives it its first value (for example, `deviceId = 101;`). They can happen in one statement.
+
+#### Q9. Is Java's `var` the same as JavaScript's `let`?
+
+**Answer:** No. Java `var` asks the compiler to infer a local variable's static type from its initializer. The type is still fixed. JavaScript `let` allows reassignment and the variable can hold values of different types.
 
 ## Deliverable
 
@@ -128,6 +218,26 @@ String deviceName = "Sensor A";
 ### Q4. Why does Java use types such as `int` and `boolean`?
 
 **Answer:** Java is statically typed. A variable has a declared type, and the compiler checks many type errors before the program runs. This helps make contracts and data handling explicit.
+
+### Q5. What is the purpose of the main method?
+
+**Answer:** For a traditional Java application launched with the Java launcher, `main` is the entry point where execution begins. The standard form is `public static void main(String[] args)`.
+
+### Q6. What is the difference between javac and java?
+
+**Answer:** `javac` compiles Java source into bytecode; `java` launches the compiled class on the JVM.
+
+### Q7. Why do we run the class name instead of the .class filename?
+
+**Answer:** The launcher expects the class name. Use `java -cp src/day-1 HelloJava`, not `java HelloJava.class`.
+
+### Q8. What is the difference between declaration and initialization?
+
+**Answer:** Declaration introduces a variable and its type. Initialization assigns its first value. They can be combined: `int deviceId = 101;`.
+
+### Q9. Is Java's `var` the same as JavaScript's `let`?
+
+**Answer:** No. Java `var` infers a fixed static type from the initializer. JavaScript `let` allows reassignment, including values of different types.
 
 ## Notes / questions from the learner
 
