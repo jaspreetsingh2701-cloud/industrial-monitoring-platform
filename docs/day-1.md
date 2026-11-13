@@ -764,6 +764,222 @@ For our monitoring platform, `Monitorable` can be a contract implemented by diff
 6. What is runtime polymorphism?
 
 
+
+## Lessons 6–9 — Collections, lambdas, Streams and Optional
+
+### Collections: Array, ArrayList, HashSet and HashMap
+
+An **array** is a fixed-size language feature; it is not part of the Collections Framework. **ArrayList**, **HashSet** and **HashMap** are collection types.
+
+| Structure | Stores | Add / update | Access |
+|---|---|---|---|
+| Array | Fixed-size indexed values | Assign by index | array[0] |
+| ArrayList<E> | Ordered elements; duplicates allowed | add(value) | get(index) |
+| HashSet<E> | Unique elements; no guaranteed order | add(value) | contains(value) |
+| HashMap<K,V> | Unique keys mapped to values | put(key, value) | get(key) |
+
+Java collections store objects, not primitive values. Use wrapper classes such as Integer for int and Double for double. Java automatically converts between primitive values and wrappers in many assignments and collection operations; this is called **autoboxing** and **unboxing**.
+
+~~~java
+int count = 10;
+Integer boxedCount = count; // autoboxing: int -> Integer
+int unboxedCount = boxedCount; // unboxing: Integer -> int
+
+List<Integer> ids = new ArrayList<>();
+ids.add(101); // int is automatically boxed to Integer
+~~~
+
+### Iterating through collections
+
+Enhanced for loop works for lists and sets:
+
+~~~java
+for (String device : devices) {
+    System.out.println(device);
+}
+~~~
+
+For a map, iterate through its entries:
+
+~~~java
+for (Map.Entry<Integer, String> entry : deviceNames.entrySet()) {
+    System.out.println(entry.getKey() + ": " + entry.getValue());
+}
+~~~
+
+entrySet() provides key-value entries; getKey() returns the key and getValue() returns the value. A HashMap does not guarantee iteration order.
+
+### Lambda expressions and functional interfaces
+
+A lambda is a concise implementation of a functional interface (an interface with one abstract method).
+
+~~~java
+List<Integer> numbers = List.of(10, 20, 30);
+numbers.forEach(number -> System.out.println(number));
+~~~
+
+Java lambda syntax uses ->; JavaScript arrow functions use =>. Common built-in functional interfaces include Predicate<T> (tests a condition), Function<T,R> (converts a value), Consumer<T> (accepts a value and returns nothing) and Supplier<T> (supplies a value).
+
+### Streams: filter, map and reduce
+
+A stream processes data through a pipeline. It does not itself store data and normally does not modify the source collection.
+
+~~~java
+List<Integer> temperatures = List.of(20, 25, 30, 35, 40);
+
+List<Integer> hotReadings = temperatures.stream()
+    .filter(temp -> temp > 30)
+    .toList(); // [35, 40]
+
+List<Integer> doubled = temperatures.stream()
+    .map(temp -> temp * 2)
+    .toList(); // [40, 50, 60, 70, 80]
+
+int total = temperatures.stream()
+    .reduce(0, (sum, temp) -> sum + temp); // 150
+~~~
+
+- filter() keeps elements matching a condition.
+- map() transforms each element.
+- reduce() combines elements into one result.
+- Intermediate operations such as filter() and map() build the pipeline; terminal operations such as toList(), forEach() and reduce() trigger processing.
+- toList() returns an unmodifiable list in modern Java (including Java 21).
+
+### Optional: represent a value that may be absent
+
+Optional<T> makes possible absence explicit in a method's return type. It is useful for results such as a device lookup that may not find a match.
+
+~~~java
+Optional<String> found = Optional.of("Temperature Sensor");
+Optional<String> missing = Optional.empty();
+
+String name = missing.orElse("Unknown Device");
+~~~
+
+Common methods: of(value) (non-null value), ofNullable(value) (nullable input), empty(), isPresent(), ifPresent(...), map(...), orElse(...) and orElseThrow(). Optional.of(null) throws NullPointerException; use ofNullable() when the input may be null. Prefer orElseGet() when computing the fallback should happen only if needed.
+
+---
+
+## Lesson 10 — Build the first Device domain model
+
+**Goal:** use classes, encapsulation, constructors, ArrayList, Streams and Optional together. Create these files under src/day-1/domain-model/. For this first exercise, keep them in the default package (do not add package declarations).
+
+### 1. Device.java
+
+~~~java
+public class Device {
+    private final int id;
+    private final String name;
+    private boolean active;
+
+    public Device(int id, String name) {
+        this.id = id;
+        this.name = name;
+        this.active = true;
+    }
+
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public boolean isActive() { return active; }
+
+    public void deactivate() {
+        this.active = false;
+    }
+
+    @Override
+    public String toString() {
+        return id + " - " + name + " (active: " + active + ")";
+    }
+}
+~~~
+
+The ID and name are final because they should not change after construction. The active state can change through the deactivate() method.
+
+### 2. DeviceService.java
+
+~~~java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+public class DeviceService {
+    private final List<Device> devices = new ArrayList<>();
+
+    public void register(Device device) {
+        devices.add(device);
+    }
+
+    public Optional<Device> findById(int id) {
+        return devices.stream()
+            .filter(device -> device.getId() == id)
+            .findFirst();
+    }
+
+    public List<Device> findActiveDevices() {
+        return devices.stream()
+            .filter(Device::isActive)
+            .toList();
+    }
+}
+~~~
+
+findFirst() returns an Optional<Device> because there may be no matching device. Device::isActive is a method reference, equivalent here to device -> device.isActive().
+
+### 3. Main.java
+
+~~~java
+public class Main {
+    public static void main(String[] args) {
+        DeviceService service = new DeviceService();
+
+        service.register(new Device(101, "Boiler Temperature"));
+        service.register(new Device(102, "Pipeline Pressure"));
+        service.register(new Device(103, "Tank Humidity"));
+
+        service.findById(102).ifPresent(System.out::println);
+
+        service.findById(103).ifPresent(Device::deactivate);
+
+        System.out.println("Active devices:");
+        service.findActiveDevices().forEach(System.out::println);
+
+        System.out.println("Missing device:");
+        System.out.println(
+            service.findById(999).map(Device::getName).orElse("Not found")
+        );
+    }
+}
+~~~
+
+Compile and run from the repository root:
+
+~~~powershell
+javac -d out src/day-1/domain-model/Device.java src/day-1/domain-model/DeviceService.java src/day-1/domain-model/Main.java
+java -cp out Main
+~~~
+
+Expected behaviour: device 102 is printed; device 103 is deactivated; the active list contains devices 101 and 102; lookup of 999 prints **Not found**.
+
+### Practice tasks
+
+1. Register a fourth device with ID 104.
+2. Deactivate device 101.
+3. Find device 101 and print its name using map() and orElse().
+4. Add a method to DeviceService that returns the total number of registered devices.
+5. Explain why findById() returns Optional<Device> instead of returning null.
+
+### Progress checklist
+
+- [x] Array vs ArrayList; ArrayList, HashSet and HashMap basics.
+- [x] Wrapper types, autoboxing and unboxing.
+- [x] Enhanced for loops and map entry iteration.
+- [x] Lambda expressions and functional interfaces.
+- [x] Stream filter, map, reduce and terminal operations.
+- [x] Optional basics and safe lookup patterns.
+- [ ] Complete and run the Device domain model exercise.
+- [ ] Add SensorReading and calculate an average reading.
+- [ ] Add basic JUnit tests and review Day 1 interview questions.
+
 ## Notes / questions from the learner
 
 Add new questions here as they arise:
