@@ -31,21 +31,24 @@ The capitalization is not what makes a type primitive or a class; it is a naming
 
 ### Java setup status
 
-Environment output supplied during Day 1:
-- `java -version`: Java 8.0.511 runtime.
-- `javac -version`: Java compiler 8.0.341.
-- `mvn -version`: Maven 3.6.3, running on Java 8.0.341.
-- `git --version`: Git 2.37.1.
-- `code --version`: VS Code 1.146.0.
+**Status: JDK 21 and Maven are successfully configured.** Verified in a fresh Windows PowerShell 5.1 session.
 
-**Status:** Git and VS Code commands are available. Java and Maven are installed, but the active Java toolchain is Java 8—not the planned JDK 21. Install JDK 21 and configure `JAVA_HOME` and `Path` before proceeding with the project code. Check that `java`, `javac` and `mvn` all resolve to JDK 21.
+- `JAVA_HOME`: `C:\Program Files\Eclipse Adoptium\jdk-21.0.13.9-hotspot`
+- `where.exe java`: JDK 21 `bin\java.exe` is the first match. The Oracle Java 8 launcher appears second and does not take priority.
+- `where.exe javac`: JDK 21 `bin\javac.exe`.
+- `java -version`: OpenJDK 21.0.13 LTS (Eclipse Temurin).
+- `javac -version`: `javac 21.0.13`.
+- `mvn -version`: Apache Maven 3.6.3, running on Java 21.0.13.
+- Environment: Windows 11, 64-bit, PowerShell 5.1.
+
+**Conclusion:** The Java runtime, compiler, and Maven all use Java 21. Java 8 can remain installed because Java 21 resolves first on PATH.
 
 ## Deliverable
 
 A console application that registers devices, finds a device by ID, filters active devices, changes status and calculates a simple reading average.
 
 ## Completion checklist
-- [ ] JDK 21 and Maven use Java 21 in the terminal.
+- [x] JDK 21 and Maven use Java 21 in the terminal.
 - [ ] Understand class, object, interface and constructor.
 - [ ] Use ArrayList, HashSet and HashMap.
 - [ ] Use Stream `filter`, `map`, `collect` and `average`.
