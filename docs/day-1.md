@@ -43,6 +43,55 @@ The capitalization is not what makes a type primitive or a class; it is a naming
 
 **Conclusion:** The Java runtime, compiler, and Maven all use Java 21. Java 8 can remain installed because Java 21 resolves first on PATH.
 
+
+### Writing and running your first Java program
+
+Create `src/day-1/HelloJava.java`:
+
+```java
+public class HelloJava {
+    public static void main(String[] args) {
+        String message = "Welcome to Java!";
+        System.out.println(message);
+    }
+}
+```
+
+Compile and run from the repository root in PowerShell:
+
+```powershell
+javac src\day-1\HelloJava.java
+java -cp src\day-1 HelloJava
+```
+
+Expected output:
+
+```text
+Welcome to Java!
+```
+
+Compilation creates `HelloJava.class` (Java bytecode). The Java launcher starts the class through the JVM. The `-cp` option sets the classpath, telling Java where to look for the compiled class.
+
+#### Understanding the main method
+
+- `public`: the launcher can access the method.
+- `static`: the method belongs to the class and can be invoked without creating an instance.
+- `void`: the method does not return a value.
+- `main`: the conventional entry-point method name.
+- `String[] args`: an array of strings containing any command-line arguments passed to the program.
+
+#### Q5. What is the purpose of the main method?
+
+**Answer:** For a traditional Java application launched with the Java launcher, `main` is the entry point where execution begins. The standard form is `public static void main(String[] args)`.
+
+#### Q6. What is the difference between javac and java?
+
+**Answer:** `javac` is the Java compiler. It compiles source files (for example, `.java`) into bytecode files (`.class`). The `java` launcher starts the compiled class on the JVM.
+
+#### Q7. Why do we run the class name instead of the .class filename?
+
+**Answer:** The launcher expects the class name, not a filename. For example, use `java -cp src/day-1 HelloJava`, not `java HelloJava.class`. The classpath (`-cp`) tells Java where the class file is located.
+
 ## Deliverable
 
 A console application that registers devices, finds a device by ID, filters active devices, changes status and calculates a simple reading average.
