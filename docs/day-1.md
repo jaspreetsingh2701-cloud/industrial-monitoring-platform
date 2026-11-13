@@ -243,3 +243,12 @@ String deviceName = "Sensor A";
 
 Add new questions here as they arise:
 - 
+
+
+### Knowledge check — Lesson 3
+
+**Score: 2/3**
+
+1. Assigning a string such as `"Offline"` to an `int` variable causes a compile-time type error.
+2. `String` is a reference type, not a primitive.
+3. Java `var` does not allow a variable to change its inferred type. For example, after `var temperature = 28.5;`, assigning `"Hot"` is a compile-time error. This differs from JavaScript `let`, which permits values of different types at runtime.
