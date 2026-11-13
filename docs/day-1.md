@@ -319,6 +319,202 @@ Output: `1`, `2`, `4`.
 3. Which loop always executes at least once?
 4. What is the difference between `break` and `continue`?
 
+
+### Deeper explanation — Encapsulation and Abstraction
+
+#### Encapsulation: compare without and with it
+
+Without encapsulation, a public field can be changed by any caller, including to invalid values:
+
+```java
+public class Device {
+    public double temperature;
+}
+
+Device device = new Device();
+device.temperature = 25.5; // valid
+device.temperature = -500; // also allowed — no validation
+```
+
+With encapsulation, make the field private and expose a controlled operation:
+
+```java
+public class Device {
+    private double temperature;
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(double temperature) {
+        if (temperature < -50 || temperature > 200) {
+            System.out.println("Invalid temperature!");
+            return;
+        }
+        this.temperature = temperature;
+    }
+}
+
+Device device = new Device();
+device.setTemperature(25.5); // accepted
+device.setTemperature(-500); // rejected
+System.out.println(device.getTemperature()); // 25.5
+```
+
+| Without encapsulation | With encapsulation |
+|---|---|
+| Public fields | Private fields |
+| Direct modification | Controlled methods |
+| No central validation | Validation can be enforced |
+| Invalid states are easier to create | Object can protect its invariants |
+
+Encapsulation is not simply adding getters and setters. It is controlling access to internal state and enforcing the object's rules. Prefer meaningful operations such as `deactivate()` or `updateTemperature()` when they express the domain better than a generic setter.
+
+#### Abstraction: expose what, hide how
+
+Suppose the dashboard needs readings from temperature, pressure and humidity sensors. The dashboard should ask for a reading without knowing the sensor's internal implementation.
+
+Without a shared contract, the dashboard may need sensor-type checks and separate logic for every sensor. With an interface, the dashboard depends on one capability:
+
+```java
+public interface Monitorable {
+    double readValue();
+}
+
+public class TemperatureSensor implements Monitorable {
+    @Override
+    public double readValue() {
+        return 28.5;
+    }
+}
+
+public class PressureSensor implements Monitorable {
+    @Override
+    public double readValue() {
+        return 101.2;
+    }
+}
+
+public class Dashboard {
+    public void displayReading(Monitorable sensor) {
+        System.out.println(sensor.readValue());
+    }
+}
+```
+
+Use it:
+
+```java
+Dashboard dashboard = new Dashboard();
+dashboard.displayReading(new TemperatureSensor());
+dashboard.displayReading(new PressureSensor());
+```
+
+The dashboard calls the same method for both sensor types. It does not need to know how each sensor obtains its value. Adding another class that implements `Monitorable` does not require changing the dashboard method.
+
+**Core idea:** abstraction exposes a capability (what an object can do) while hiding implementation details (how it does it).
+
+#### Interface: a capability or contract
+
+An interface defines methods a class agrees to provide. It is useful when different or unrelated classes share a capability.
+
+```java
+public interface Monitorable {
+    double readValue();
+}
+
+public class TemperatureSensor implements Monitorable {
+    @Override
+    public double readValue() {
+        return 28.5;
+    }
+}
+```
+
+A class can implement multiple interfaces. Interfaces cannot be instantiated and have no constructors. Interface fields are implicitly `public static final`; interfaces can also contain `default`, `static` and `private` methods.
+
+#### Abstract class: a shared foundation
+
+Use an abstract class when related classes need common state, a constructor and shared implementation, but some behaviour must be supplied by each child.
+
+```java
+public abstract class Sensor {
+    protected int deviceId;
+    protected String deviceName;
+
+    public Sensor(int deviceId, String deviceName) {
+        this.deviceId = deviceId;
+        this.deviceName = deviceName;
+    }
+
+    public void connect() {
+        System.out.println(deviceName + " connected");
+    }
+
+    public abstract double readValue();
+}
+
+public class TemperatureSensor extends Sensor {
+    public TemperatureSensor(int id, String name) {
+        super(id, name);
+    }
+
+    @Override
+    public double readValue() {
+        return 28.5;
+    }
+}
+```
+
+Here, `connect()` is shared implementation. `readValue()` is abstract, so each concrete child must implement it. You cannot instantiate `Sensor` directly. `super(...)` calls the parent constructor.
+
+#### Interface vs abstract class — side by side
+
+| Feature | Interface | Abstract class |
+|---|---|---|
+| Main purpose | Define a capability/contract | Provide a shared base |
+| Used by a class with | `implements` | `extends` |
+| Constructor | No | Yes |
+| Instance fields | No | Yes |
+| Implemented methods | Can have default, static and private methods | Can have concrete methods |
+| Abstract methods | Yes | Yes |
+| Multiple | A class can implement many interfaces | A class can extend only one class |
+
+A class can extend one abstract/base class and implement multiple interfaces, for example: `class TemperatureSensor extends Sensor implements Monitorable, Controllable`.
+
+#### When to choose which in our platform
+
+- Use `Monitorable` when a type must provide `readValue()`, regardless of its class hierarchy.
+- Use an abstract `Sensor` when sensor classes share ID, name, connection state and common connection behaviour.
+- Use separate interfaces such as `Monitorable` and `Controllable` for independent capabilities.
+
+#### TypeScript comparison
+
+TypeScript interfaces are similar to Java interfaces as contracts:
+
+```typescript
+interface Monitorable {
+    readValue(): number;
+}
+
+class TemperatureSensor implements Monitorable {
+    readValue(): number {
+        return 28.5;
+    }
+}
+```
+
+TypeScript also supports `abstract class`. Java's `interface` and TypeScript's `interface` are similar in their contract role, though their language rules and runtime behaviour are not identical.
+
+#### Four OOP pillars — quick distinction
+
+| Pillar | Meaning | Monitoring example |
+|---|---|---|
+| Encapsulation | Protect internal data and control changes | Private temperature field with validation |
+| Abstraction | Expose capabilities, hide implementation details | Dashboard calls `Monitorable.readValue()` |
+| Inheritance | Reuse parent behaviour | TemperatureSensor extends Sensor |
+| Polymorphism | Same call, different implementation | Temperature and pressure sensors implement `readValue()` differently |
+
 ## Deliverable
 
 A console application that registers devices, finds a device by ID, filters active devices, changes status and calculates a simple reading average.
