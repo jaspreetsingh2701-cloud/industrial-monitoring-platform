@@ -328,11 +328,245 @@ A console application that registers devices, finds a device by ID, filters acti
 - [x] JDK 21 and Maven use Java 21 in the terminal.
 - [x] Java execution flow, first program, variables and data types taught.
 - [x] Operators, decisions and loops taught.
-- [ ] Understand class, object, interface and constructor.
+- [x] Understand class, object, interface and constructor.
 - [ ] Use ArrayList, HashSet and HashMap.
 - [ ] Use Stream `filter`, `map`, `collect` and `average`.
 - [ ] Handle missing values with Optional.
 - [ ] Run the application and explain the code without simply reading it.
+
+
+### Lesson 5 — Object-Oriented Programming (OOP)
+
+OOP models software as objects that combine state (data) and behaviour (methods). Our monitoring platform will model devices and sensors as Java objects.
+
+#### Class and object
+
+A class is a blueprint; an object is an instance created from it.
+
+```java
+public class Device {
+    int deviceId;
+    String deviceName;
+    boolean isActive;
+}
+```
+
+Create and use an object:
+
+```java
+Device device1 = new Device();
+device1.deviceId = 101;
+device1.deviceName = "Boiler Sensor";
+device1.isActive = true;
+System.out.println(device1.deviceName);
+```
+
+A class can create many independent objects, each with its own instance field values.
+
+#### Constructor
+
+A constructor initializes an object when it is created. It has the same name as the class and no return type (not even `void`).
+
+```java
+public class Device {
+    int deviceId;
+    String deviceName;
+    boolean isActive;
+
+    public Device(int deviceId, String deviceName, boolean isActive) {
+        this.deviceId = deviceId;
+        this.deviceName = deviceName;
+        this.isActive = isActive;
+    }
+}
+```
+
+Create it with `Device device = new Device(101, "Boiler Sensor", true);`.
+
+If no constructor is declared, Java provides a default no-argument constructor. Once you declare a constructor yourself, Java does not automatically provide that default constructor.
+
+#### The this keyword
+
+`this` refers to the current object. In `this.deviceId = deviceId;`, the left side is the object's field and the right side is the constructor parameter.
+
+#### Encapsulation
+
+Encapsulation protects an object's internal state by making fields private and exposing controlled methods.
+
+```java
+public class Device {
+    private int deviceId;
+    private String deviceName;
+    private boolean active;
+
+    public Device(int deviceId, String deviceName) {
+        this.deviceId = deviceId;
+        this.deviceName = deviceName;
+        this.active = true;
+    }
+
+    public int getDeviceId() { return deviceId; }
+    public String getDeviceName() { return deviceName; }
+    public boolean isActive() { return active; }
+
+    public void deactivate() {
+        this.active = false;
+    }
+}
+```
+
+External code can call `device.deactivate()`, but cannot directly access `device.active`. This lets the class control and validate state changes.
+
+#### Access modifiers
+
+| Modifier | Accessibility |
+|---|---|
+| `public` | Accessible from anywhere |
+| `protected` | Same package and subclasses (with Java's access rules) |
+| No modifier (package-private) | Same package |
+| `private` | Only within the declaring class |
+
+Common practice: keep fields private, expose intended public methods, and keep implementation helpers private.
+
+#### Inheritance
+
+Inheritance lets a child class extend a parent class and reuse its accessible behaviour.
+
+```java
+public class Device {
+    protected int deviceId;
+    protected String deviceName;
+
+    public Device(int deviceId, String deviceName) {
+        this.deviceId = deviceId;
+        this.deviceName = deviceName;
+    }
+
+    public void connect() {
+        System.out.println(deviceName + " connected");
+    }
+}
+
+public class TemperatureSensor extends Device {
+    public TemperatureSensor(int deviceId, String deviceName) {
+        super(deviceId, deviceName);
+    }
+
+    public void readTemperature() {
+        System.out.println("Reading temperature...");
+    }
+}
+```
+
+`extends` declares inheritance; `super(...)` invokes the parent constructor. Java classes have single class inheritance: a class can extend only one class.
+
+#### Polymorphism
+
+Polymorphism allows the same method call to behave differently depending on the object's runtime type.
+
+```java
+class Device {
+    public void read() {
+        System.out.println("Reading generic device");
+    }
+}
+
+class TemperatureSensor extends Device {
+    @Override
+    public void read() {
+        System.out.println("Reading temperature");
+    }
+}
+
+class PressureSensor extends Device {
+    @Override
+    public void read() {
+        System.out.println("Reading pressure");
+    }
+}
+
+Device first = new TemperatureSensor();
+Device second = new PressureSensor();
+first.read();
+second.read();
+```
+
+Output is `Reading temperature` followed by `Reading pressure`. The reference type is `Device`, but Java dispatches the overridden method based on the actual object at runtime. `@Override` asks the compiler to verify that the method really overrides a parent method.
+
+#### Abstraction: abstract class
+
+An abstract class can provide shared implementation while requiring subclasses to implement selected methods.
+
+```java
+abstract class Device {
+    public abstract void read();
+
+    public void connect() {
+        System.out.println("Device connected");
+    }
+}
+
+class TemperatureSensor extends Device {
+    @Override
+    public void read() {
+        System.out.println("Reading temperature");
+    }
+}
+```
+
+You cannot instantiate an abstract class directly.
+
+#### Abstraction: interface
+
+An interface defines a contract. A class uses `implements` to promise that it provides the required behaviour.
+
+```java
+public interface Monitorable {
+    void read();
+}
+
+public class TemperatureSensor implements Monitorable {
+    @Override
+    public void read() {
+        System.out.println("Reading temperature");
+    }
+}
+
+Monitorable sensor = new TemperatureSensor();
+sensor.read();
+```
+
+A Java class can implement multiple interfaces, but can extend only one class. Interfaces can also contain default, static and private methods; their fields are implicitly `public static final`. Interfaces have no constructors.
+
+#### Abstract class vs interface
+
+| Abstract class | Interface |
+|---|---|
+| A class extends it | A class implements it |
+| Can have instance fields and constructors | No instance constructors; fields are constants |
+| Can contain abstract and concrete methods | Can declare abstract, default, static and private methods |
+| A class can extend only one class | A class can implement multiple interfaces |
+
+For our monitoring platform, `Monitorable` can be a contract implemented by different sensor types.
+
+#### Four pillars of OOP
+
+| Pillar | Meaning | Monitoring example |
+|---|---|---|
+| Encapsulation | Protect internal data | Private device fields |
+| Inheritance | Reuse parent behaviour | TemperatureSensor extends Device |
+| Polymorphism | Same call, different implementation | Sensor-specific `read()` |
+| Abstraction | Expose a contract, hide details | Monitorable interface |
+
+#### Lesson 5 practice
+
+1. What is the difference between a class and an object?
+2. Why does a constructor have no return type?
+3. Why do we make fields private?
+4. What does `super()` do?
+5. What is the difference between `extends` and `implements`?
+6. What is runtime polymorphism?
+
 
 ## Notes / questions from the learner
 
