@@ -34,6 +34,10 @@ A growing, beginner-friendly dictionary of the technical terms used in the Indus
 | JAR (Java Archive) | A packaged file containing compiled Java classes and resources. |
 | Maven Central | A widely used public repository for Java and JVM libraries. |
 | Maven plugin | An extension that adds tasks to Maven's build lifecycle, such as compilation, testing or packaging. |
+| JUnit 5 (JUnit Jupiter) | A Java testing framework that provides annotations such as `@Test` and assertion APIs for writing tests. |
+| JUnit Platform | The infrastructure used to discover and execute tests through compatible test engines. |
+| Maven Surefire Plugin | A Maven plugin that discovers and launches tests during the Maven `test` phase. |
+| IDE test runner | An IDE feature that can run tests directly, without using Maven Surefire. |
 | Build lifecycle | Maven's standard sequence of phases for validating, compiling, testing and packaging a project. |
 | Apache Ant | A Java build automation tool configured with an XML `build.xml` file. |
 | Apache Ivy | A dependency management tool often used alongside Ant. |
