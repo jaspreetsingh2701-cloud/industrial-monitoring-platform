@@ -6,13 +6,13 @@ Update this file as we complete each step. Do not mark an item complete until it
 
 - [x] Setup verified — JDK 21, VS Code and Maven working
 - [x] Day 1 complete
-- [ ] Day 2 complete
+- [ ] Day 2 complete (in progress)
 - [ ] Day 3 complete
 - [ ] Day 4 complete
 - [ ] Day 5 complete
 - [ ] End-to-end prototype verified
 
-**Current status:** Day 1 complete. Device and SensorReading domain model exercises are implemented; Maven compiles with Java 21; Spotless formatting and checks pass; all 8 JUnit tests pass. The learner can now commit and push the verified Day 1 work.
+**Current status:** Day 1 complete. Day 2 has started with Spring vs Spring Boot, Dependency Injection, Spring Beans, constructor injection, singleton scope and stateless Bean/thread-safety fundamentals covered conceptually. Spring Boot application setup and implementation are still pending.
 
 ## Daily tracker
 
@@ -20,7 +20,7 @@ Update this file as we complete each step. Do not mark an item complete until it
 |---|---|---|---|
 | Setup | JDK 21, VS Code, Maven, Git | Complete | Temurin JDK 21.0.13 and Maven 3.6.3 verified on Java 21 |
 | Day 1 | Java fundamentals and device console app | Complete | Device and SensorReading implemented; Java 21 compilation succeeds; Spotless apply/check succeed; 8 JUnit tests pass (0 failures/errors). Ready for learner commit/push |
-| Day 2 | Spring Boot REST and persistence | Not started | Build on the Day 1 domain model |
+| Day 2 | Spring Boot REST and persistence | In progress | Covered Spring vs Spring Boot, DI, Bean relationships, constructor injection, singleton scope and shared-state/thread-safety basics. Next: `@SpringBootApplication` and create/run the Device Service. |
 | Day 3 | Microservices, gRPC and SSE | Not started | Separate services and service-owned data |
 | Day 4 | WebSocket and React dashboard | Not started | Real-time telemetry integration |
 | Day 5 | Security, tests, Docker and integration | Not started | End-to-end prototype verification |
