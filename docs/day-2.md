@@ -189,15 +189,97 @@ Spring Boot can use other embedded servers, such as Jetty or Undertow, depending
 
 ---
 
+## Expanded Day 2 learning sequence and progress
+
+The expanded sequence below is the working checklist for the current learning session. A checked item means the concept was covered and/or the implementation was run and verified; it does not imply that every production enhancement is complete.
+
+| # | Topic | Status | Evidence / notes |
+|---|---|---|---|
+| 1 | Spring vs Spring Boot, IoC, DI, Beans and singleton scope | Complete | Covered constructor injection, Bean reuse, stateless services and thread-safety implications. |
+| 2 | `@SpringBootApplication`, startup lifecycle and embedded server | Complete | Device Service starts with Spring Boot 4.1.2 and embedded Tomcat 11 on port 8080. |
+| 3 | HTTP and REST fundamentals | Complete | Exercised GET, POST, PUT and DELETE, request/response bodies and status codes. |
+| 4 | Controllers, service and repository responsibilities | Complete | Implemented separate controller, service and in-memory repository classes. |
+| 5 | Path variables and request bodies | Complete | Implemented `/devices/{id}` and JSON request payloads. Explicit `@PathVariable("id")` avoids dependence on compiler parameter-name metadata. |
+| 6 | DTOs, entities/models and JSON | Complete | Added `DeviceRequest` DTO and mapped it to the Device model. |
+| 7 | Validation and exception handling | Complete | Added Jakarta validation and a global REST exception handler. |
+| 8 | API verification with PowerShell | Complete | Verified create, list, get, update, delete, duplicate ID, invalid name and missing-device responses. |
+| 9 | JUnit 5, Mockito and service tests | Complete | Six service tests pass. |
+| 10 | Controller tests with MockMvc | Complete | Four `@WebMvcTest` controller tests pass. |
+| 11 | Configuration, profiles, environment variables and logging | Pending | Next learning batch. |
+| 12 | PostgreSQL, JPA, Hibernate and transactions | Pending | Device persistence is currently in memory. |
+| 13 | Complete persistent Device CRUD API | In progress | CRUD endpoints work; persistence migration remains. |
+| 14 | Debugging, production practices and interview review | In progress | Continue with configuration/logging, persistence and final review. |
+
+## Verified Device Service implementation
+
+**Labels:** `INTERMEDIATE` · `REAL USE CASE` · `PRODUCTION`
+
+Current implementation lives under `services/device-service/src/main/java/com/monitoring/device/`:
+
+| Area | File | Responsibility |
+|---|---|---|
+| Application entry point | `DeviceServiceApplication.java` | Boots the Spring application. |
+| Controller | `controller/DeviceController.java` | Exposes the HTTP endpoints. |
+| Request DTO | `dto/DeviceRequest.java` | Defines and validates incoming device data. |
+| Model | `model/Device.java` | Represents a device in the current in-memory implementation. |
+| Service | `service/DeviceService.java` | Applies device business rules. |
+| Repository | `repository/DeviceRepository.java` | Stores and retrieves devices in memory. |
+| Custom exception | `exception/DuplicateDeviceException.java` | Represents duplicate device IDs. |
+| Global handler | `exception/GlobalExceptionHandler.java` | Converts known exceptions and validation failures into HTTP responses. |
+
+### Implemented API contract
+
+| Method | Endpoint | Expected success response |
+|---|---|---|
+| GET | `/devices` | `200 OK` with the device list |
+| GET | `/devices/{id}` | `200 OK` with the device, or `404 Not Found` |
+| POST | `/devices` | `201 Created` with the created device and a Location header |
+| PUT | `/devices/{id}` | `200 OK` with the updated device, or `404 Not Found` |
+| DELETE | `/devices/{id}` | `204 No Content`, or `404 Not Found` |
+
+### Verified validation and error behaviour
+
+- Duplicate device ID returns `409 Conflict`: the request is structurally valid, but conflicts with the existing resource state.
+- Invalid request data, such as a blank device name, returns `400 Bad Request`.
+- A request for a missing device returns `404 Not Found`.
+- The controller delegates business rules to the service; the repository is not injected directly into the controller.
+
+### Automated test results
+
+The latest verified command was:
+
+```powershell
+# Run a clean test cycle for the Device Service module.
+.\scripts\device.ps1 test
+```
+
+**Verified result:** 10 tests passed — 6 service tests and 4 controller tests, with 0 failures, 0 errors and 0 skipped tests.
+
+- Service tests use JUnit 5 and Mockito to isolate `DeviceService` from the repository.
+- Controller tests use `@WebMvcTest(DeviceController.class)`, MockMvc and `@MockitoBean` to exercise the HTTP layer without starting a real embedded HTTP server.
+- `@SpringBootTest` loads the full application context; `@WebMvcTest` loads a focused MVC test slice.
+- In-memory data is lost when the application restarts. PostgreSQL/JPA persistence is still pending.
+
+### Current implementation limitations
+
+- The repository is currently an in-memory `ArrayList`, not a database-backed repository.
+- PostgreSQL, JPA/Hibernate mappings and transaction behaviour have not yet been implemented.
+- Environment-specific profiles and externalised secrets/configuration are still to be covered.
+- Production logging has not yet replaced all demonstration output.
+
 ## Day 2 completion checklist
 
-- [ ] Explain dependency injection and common Spring annotations.
-- [ ] Implement controller, service and repository layers.
-- [ ] Return appropriate HTTP status codes.
-- [ ] Validate requests and handle errors consistently.
-- [ ] Persist and retrieve device records.
-- [ ] Test endpoints using curl or an API client.
-- [ ] Run the application and explain the request flow.
+- [x] Explain dependency injection, Beans, singleton scope and common Spring annotations.
+- [x] Start the Spring Boot Device Service and explain the embedded Tomcat request flow.
+- [x] Implement controller, service and repository layers.
+- [x] Implement GET, POST, PUT and DELETE endpoints with appropriate status codes.
+- [x] Validate requests and handle known errors centrally.
+- [x] Verify successful and failure API scenarios.
+- [x] Add service tests using JUnit 5 and Mockito.
+- [x] Add controller tests using MockMvc.
+- [ ] Configure profiles, environment variables and application logging.
+- [ ] Persist and retrieve device records using PostgreSQL and Spring Data JPA.
+- [ ] Complete the remaining production/debugging and interview review.
 
 ## Day 2 working agreement
 
