@@ -12,7 +12,7 @@ Update this file as we complete each step. Do not mark an item complete until it
 - [ ] Day 5 complete
 - [ ] End-to-end prototype verified
 
-**Current status:** Day 1 is complete. Day 2 has progressed from Spring fundamentals to a running Spring Boot Device Service with CRUD REST endpoints, request validation, centralized exception handling and automated service/controller tests. The latest verified test run passed all 10 tests (6 service + 4 controller). The repository is still in-memory; configuration/logging and PostgreSQL/JPA persistence remain.
+**Current status:** Day 1 is complete. Day 2 has progressed from Spring fundamentals to a running Spring Boot Device Service with CRUD REST endpoints, request validation, centralized exception handling and automated service/controller tests. The latest verified test run passed all 10 tests (6 service + 4 controller). Base/dev/prod configuration files have been created and the dev profile was verified on port 8081. SLF4J/Logback and PostgreSQL/JPA concepts have been introduced; logger implementation/testing, externalised environment variables and PostgreSQL/JPA persistence remain to be verified or implemented.
 
 ## Daily tracker
 
@@ -20,7 +20,7 @@ Update this file as we complete each step. Do not mark an item complete until it
 |---|---|---|---|
 | Setup | JDK 21, VS Code, Maven, Git | Complete | Temurin JDK 21.0.13 and Maven 3.6.3 verified on Java 21. |
 | Day 1 | Java fundamentals and device console app | Complete | Device and SensorReading implemented; Java 21 compilation succeeds; Spotless apply/check succeed; 8 JUnit tests pass (0 failures/errors). |
-| Day 2 | Spring Boot REST and persistence | In progress — ~65% | Spring DI/Beans/startup covered; Device Service starts on port 8080 with embedded Tomcat 11; GET/POST/PUT/DELETE endpoints implemented; DTO validation and global exception handling verified; 6 Mockito service tests + 4 MockMvc controller tests pass. Next: configuration/profiles/logging, then PostgreSQL/JPA persistence and final review. |
+| Day 2 | Spring Boot REST and persistence | In progress — ~65% | Spring DI/Beans/startup covered; Device Service CRUD endpoints, DTO validation and global exception handling verified; 6 Mockito service tests + 4 MockMvc controller tests pass. Base/dev/prod property files created and dev profile verified on port 8081. SLF4J/Logback and PostgreSQL/JPA foundations covered; logger/test verification, environment-variable setup and PostgreSQL/JPA persistence remain. |
 | Day 3 | Microservices, gRPC and SSE | Not started | Separate services and service-owned data. |
 | Day 4 | WebSocket and React dashboard | Not started | Real-time telemetry integration. |
 | Day 5 | Security, tests, Docker and integration | Not started | End-to-end prototype verification. |
@@ -70,10 +70,11 @@ Latest reported result:
 1. Application configuration: properties vs YAML, server port and configuration precedence.
 2. Profiles: development vs production configuration.
 3. Environment variables and externalised configuration; do not commit secrets.
-4. Logging with SLF4J/Logback; replace ad-hoc console output with structured application logs.
-5. PostgreSQL, JPA/Hibernate entities, repositories and transaction basics.
-6. Replace the in-memory repository with database persistence and rerun the test suite.
-7. Final debugging, production-practice and interview review.
+4. Finish logging with SLF4J/Logback; verify logger placement and rerun the test suite.
+5. Configure externalised environment variables and review secret-handling practices.
+6. Set up PostgreSQL, then learn JPA/Hibernate entities, Spring Data repositories and transaction basics.
+7. Replace the in-memory repository with database persistence and rerun the test suite.
+8. Final debugging, production-practice and interview review.
 
 ## Decisions and notes
 
