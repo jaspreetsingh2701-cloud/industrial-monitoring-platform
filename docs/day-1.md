@@ -525,10 +525,10 @@ A console application that registers devices, finds a device by ID, filters acti
 - [x] Java execution flow, first program, variables and data types taught.
 - [x] Operators, decisions and loops taught.
 - [x] Understand class, object, interface and constructor.
-- [ ] Use ArrayList, HashSet and HashMap.
-- [ ] Use Stream `filter`, `map`, `collect` and `average`.
-- [ ] Handle missing values with Optional.
-- [ ] Run the application and explain the code without simply reading it.
+- [x] Use ArrayList, HashSet and HashMap.
+- [x] Use Stream `filter`, `map`, `collect` and `average`.
+- [x] Handle missing values with Optional.
+- [x] Run the application and explain the code without simply reading it.
 
 
 ### Lesson 5 — Object-Oriented Programming (OOP)
@@ -1075,3 +1075,27 @@ JavaScript analogy: `value ?? getDefaultValue()` evaluates the function call onl
 
 Add new questions here as they arise:
 - 
+
+
+## Day 1 verification — 14 November 2026
+
+**Status: Complete.** The Device and SensorReading domain model exercises are implemented. The project compiles with Java 21, and all eight JUnit 5 tests pass.
+
+### Unit tests
+
+- `DeviceTest`: 3 tests covering initial active state, deactivation and device name.
+- `DeviceServiceTest`: 5 tests covering registration/counting, lookup, missing lookup, active-device filtering and active-device count/inactive detection.
+
+### Formatting
+
+Spotless with Google Java Format is configured for Java sources.
+
+```powershell
+mvn spotless:apply
+mvn spotless:check
+mvn clean test
+```
+
+**Verified result:** Spotless apply succeeded, Spotless check succeeded, and Maven reported 8 tests run, 0 failures, 0 errors and 0 skipped.
+
+Note: `pom.xml` is XML, not Java; format it separately using the VS Code XML formatter.
