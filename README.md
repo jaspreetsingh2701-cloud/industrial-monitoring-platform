@@ -21,6 +21,7 @@ Build a working industrial monitoring prototype while learning Java, Spring Boot
 | `docs/03-java-vs-javascript.md` | Java concepts mapped to JavaScript equivalents |
 | `docs/04-vscode-java-setup.md` | Windows + VS Code + Java setup |
 | `docs/05-extended-backend-roadmap.md` | Days 6–18: expanded Java, Spring, microservices and interview curriculum |
+| `docs/06-java-spring-glossary.md` | One-line definitions of Java, Maven, Spring Boot, REST and backend terms; updated throughout the sprint |
 | `PROGRESS.md` | Checklist and learning log |
 
 ## Java compilation: JDK vs Maven
