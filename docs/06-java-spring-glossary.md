@@ -84,6 +84,29 @@ A growing, beginner-friendly dictionary of the technical terms used in the Indus
 | Java `HttpServer` | A basic HTTP server API in the JDK for lightweight HTTP handling without a full Servlet container. |
 | DispatcherServlet | Spring MVC's front controller that dispatches incoming HTTP requests to handler methods. |
 
+## Databases and persistence
+
+| Term | One-line meaning |
+|---|---|
+| PostgreSQL | An open-source relational database management system that stores structured data persistently. |
+| Relational database | A database that organises data into related tables made up of rows and columns. |
+| Table | A named structure in a relational database that stores records using defined columns. |
+| Row (record) | One stored record in a database table. |
+| Column | A named field in a database table, with a defined data type. |
+| Primary key | A column or set of columns that uniquely identifies each row in a table. |
+| Persistence | The ability to retain data beyond the lifetime of the process that created it. |
+| In-memory storage | Data held in application memory; it is normally lost when the process stops unless explicitly saved elsewhere. |
+| JDBC (Java Database Connectivity) | The standard Java API for connecting to relational databases and executing SQL. |
+| ORM (Object-Relational Mapping) | A technique for mapping objects in application code to relational database tables and rows. |
+| JPA (Jakarta Persistence) | A Java specification defining APIs and mapping rules for object-relational persistence; it is not itself an implementation or database. |
+| Hibernate ORM | A popular implementation of JPA that maps Java entities to relational data and translates persistence operations into SQL. |
+| Spring Data JPA | A Spring project that simplifies JPA-based data access by providing repository abstractions and generated implementations. |
+| Transaction | A group of database operations treated as one unit of work, with commit or rollback behaviour. |
+| `@Entity` | Marks a Java class as a persistent entity mapped to a database table. |
+| `@Table` | Specifies the database table mapped to a JPA entity. |
+| `@Id` | Marks the primary-key field or property of a JPA entity. |
+| `@Transactional` | Declares a method or class boundary where Spring should apply transaction management. |
+
 ## Web and REST APIs
 
 | Term | One-line meaning |
@@ -112,6 +135,33 @@ A growing, beginner-friendly dictionary of the technical terms used in the Indus
 | Instance variable | A field belonging to an object instance and shared by threads that access that same object. |
 | Local variable | A variable declared inside a method invocation, separate for each invocation. |
 | Race condition | A bug where the result depends on the timing or interleaving of concurrent operations. |
+
+## Spring MVC testing and API implementation
+
+| Term | One-line meaning |
+|---|---|
+| MockMvc | Spring's test utility for sending simulated HTTP requests through the MVC layer without starting a real web server. |
+| `@WebMvcTest` | A Spring Boot test-slice annotation that loads focused MVC/controller infrastructure rather than the full application. |
+| `@MockitoBean` | Registers a Mockito mock in the Spring test ApplicationContext to replace a real Bean dependency. |
+| Mockito | A Java mocking framework used to create test doubles and verify interactions with dependencies. |
+| Mock | A test double whose behaviour can be configured and whose interactions can be verified. |
+| Test slice | A focused test ApplicationContext that loads only a selected part of the application, such as MVC or JPA. |
+| `@SpringBootTest` | Loads the full Spring Boot application context for integration-style tests. |
+| Arrange–Act–Assert (AAA) | A test structure: prepare inputs/dependencies, execute the operation, then assert the result and relevant interactions. |
+| `ResponseEntity` | A Spring type for controlling an HTTP response's status, headers and body. |
+| `@RestControllerAdvice` | A global component for handling exceptions raised by REST controllers. |
+| `@Valid` | Triggers validation of an annotated request object when supported validation is configured. |
+| `@NotBlank` | A validation constraint requiring a character sequence to contain at least one non-whitespace character. |
+| `@Positive` | A validation constraint requiring a numeric value to be greater than zero; null is valid unless another constraint rejects it. |
+| 400 Bad Request | HTTP status indicating the server cannot process the request because of invalid client input. |
+| 404 Not Found | HTTP status indicating that the requested resource was not found. |
+| 409 Conflict | HTTP status indicating that the request conflicts with the current state of the resource, such as a duplicate device ID. |
+| 201 Created | HTTP status indicating that the request successfully created a resource. |
+| 204 No Content | HTTP status indicating successful processing with no response body. |
+| SLF4J | A logging facade that lets application code use a consistent logging API with a chosen logging implementation. |
+| Logback | A logging implementation commonly used by Spring Boot behind the SLF4J API. |
+| Application profile | A named configuration set, such as `dev` or `prod`, used to activate environment-specific settings. |
+| Externalised configuration | Keeping environment-dependent settings outside application code, commonly in config files, environment variables or a secret manager. |
 
 ## Add to this glossary
 

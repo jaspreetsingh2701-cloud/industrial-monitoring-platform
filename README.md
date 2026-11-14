@@ -287,6 +287,16 @@ industrial-monitoring-platform/
 └── README.md
 ```
 
+## Current implementation snapshot
+
+**Day 2 — Device Service:** The Spring Boot service currently exposes device CRUD endpoints, validates request DTOs, centralises API error responses and has separate service/controller tests. The latest verified test run reported **10 passing tests** (6 service tests and 4 MockMvc controller tests).
+
+- Implementation guide and verified endpoint/test details: [Day 2 guide](docs/day-2.md)
+- Current learning status and next steps: [Progress tracker](PROGRESS.md)
+- Short definitions for Spring, REST and testing terms: [Java & Spring glossary](docs/06-java-spring-glossary.md)
+
+**Current limitation:** Device records are stored in memory. PostgreSQL and Spring Data JPA persistence, environment profiles and production logging are still pending; do not treat the service as database-persistent yet.
+
 ## Working agreement
 
 - Follow one day at a time; do not jump ahead just to create more code.
