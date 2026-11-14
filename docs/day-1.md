@@ -1045,6 +1045,32 @@ Expected behaviour: device 102 is printed; device 103 is deactivated; the active
 - [ ] Add SensorReading and calculate an average reading.
 - [ ] Add basic JUnit tests and review Day 1 interview questions.
 
+
+### Optional — `orElse()` vs `orElseGet()`
+
+Both methods provide a fallback when an Optional is empty, but they differ in when the fallback is evaluated.
+
+```java
+String name = service.findById(102)
+    .map(Device::getName)
+    .orElse(getDefaultDeviceName());
+```
+
+- `orElse(value)` evaluates its argument before the method is called. Therefore, `getDefaultDeviceName()` runs even when device 102 exists and the fallback is not used.
+- `orElseGet(supplier)` accepts a Supplier and invokes it only when the Optional is empty:
+
+```java
+String name = service.findById(102)
+    .map(Device::getName)
+    .orElseGet(() -> getDefaultDeviceName());
+```
+
+If device 102 exists, both return its name, `Pipeline Pressure`. The first version also prints any message inside `getDefaultDeviceName()`; the second does not call that method.
+
+**Interview takeaway:** `orElse()` uses eager fallback evaluation; `orElseGet()` uses lazy, on-demand fallback evaluation. Prefer `orElseGet()` when creating or calculating the fallback is expensive or has side effects.
+
+JavaScript analogy: `value ?? getDefaultValue()` evaluates the function call only when the left side is nullish, similar to the lazy behaviour of `orElseGet()`.
+
 ## Notes / questions from the learner
 
 Add new questions here as they arise:
