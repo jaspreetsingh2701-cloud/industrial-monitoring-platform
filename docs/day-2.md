@@ -104,6 +104,124 @@ A section can have more than one label, for example `INTERMEDIATE` + `PRODUCTION
 
 **Practice:** Persist devices and retrieve them after restarting the application.
 
+### Database persistence foundations — concept lesson
+
+**Labels:** `BASIC` · `INTERMEDIATE` · `INTERVIEW` · `REAL USE CASE`
+
+This section records the concepts introduced before installing or configuring PostgreSQL. The concepts are covered; database setup and implementation are still pending.
+
+#### In-memory collection vs relational database
+
+The current `DeviceRepository` stores devices in an `ArrayList`:
+
+```java
+// Store device objects in the running application's memory.
+private final List<Device> devices = new ArrayList<>();
+```
+
+- **In-memory storage:** Data exists in the running application's memory. It is initially empty and is lost when the process stops or restarts.
+- **PostgreSQL persistence:** Data is stored in database files managed by PostgreSQL. Records remain available after the Spring Boot application restarts, subject to database durability and operational configuration.
+
+A relational database organises data into tables. A table contains rows (records) and columns (fields). For example, a `devices` table can have `id`, `name` and `type` columns. A primary key uniquely identifies each row.
+
+#### JDBC — Java Database Connectivity
+
+**BASIC | INTERVIEW**
+
+JDBC is the standard Java API for connecting to relational databases and executing SQL. It provides lower-level building blocks for opening connections, sending SQL statements and reading results. An application can use JDBC directly, but it must handle more of the SQL execution and result mapping itself.
+
+#### JPA and Hibernate
+
+**BASIC | INTERMEDIATE | INTERVIEW**
+
+- **JPA (Jakarta Persistence):** A Java persistence specification. It defines standard APIs and mapping rules for storing and retrieving Java objects in relational databases. JPA is not itself a database or an implementation.
+- **Hibernate ORM:** A popular implementation of the JPA specification. It maps Java objects to relational tables and translates persistence operations into SQL. It also manages entity state and other ORM behaviour.
+- **ORM (Object-Relational Mapping):** The technique of mapping objects in an object-oriented program to rows and tables in a relational database.
+
+A useful mental model is: JPA defines the contract; Hibernate provides an implementation of that contract. JDBC is a lower-level database connectivity API that Hibernate can use underneath.
+
+#### Entity mapping
+
+**INTERMEDIATE | REAL USE CASE**
+
+An Entity is a Java class mapped to a database table. JPA annotations describe the mapping. For example, this is an illustrative mapping for the Device model; do not replace the current project class until the implementation step:
+
+```java
+// Import the Jakarta Persistence annotations explicitly.
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+// Map this Java class to the devices table.
+@Entity
+@Table(name = "devices")
+public class Device {
+
+    // Identify the primary key column.
+    @Id
+    private Long id;
+
+    // Map the device name to a table column.
+    private String name;
+
+    // Map the device type to a table column.
+    private String type;
+
+    // JPA requires a no-argument constructor for this entity.
+    public Device() {
+    }
+}
+```
+
+The `@Entity` annotation marks the class as a persistent entity, `@Table` specifies its table name, and `@Id` identifies its primary key. We will later review generated IDs, column constraints, constructors and entity design in the actual service.
+
+#### Where Spring Data JPA fits
+
+**INTERMEDIATE | PRODUCTION**
+
+Spring Data JPA builds on JPA and reduces repository boilerplate. Instead of manually implementing every common CRUD query, we can define a repository interface and let Spring Data provide the implementation at runtime. We will introduce this when replacing the current in-memory `DeviceRepository`.
+
+#### Transactions — preview
+
+**INTERMEDIATE | PRODUCTION**
+
+A database transaction groups one or more database operations into a unit of work. The goal is to preserve consistency: a transaction should complete successfully as a whole or be rolled back when it fails. We will cover transaction boundaries and `@Transactional` during the persistence implementation.
+
+#### Request-to-database flow
+
+```text
+HTTP request
+    |
+    v
+DeviceController
+    |
+    v
+DeviceService
+    |
+    v
+Spring Data repository
+    |
+    v
+JPA API
+    |
+    v
+Hibernate ORM
+    |
+    v
+JDBC
+    |
+    v
+PostgreSQL
+```
+
+This is the conceptual path for the database-backed implementation. The current repository is still an in-memory `ArrayList`; the database-backed path is not implemented yet.
+
+**JavaScript/TypeScript comparison:** PostgreSQL is the same database engine regardless of backend language. JPA/Hibernate serve an ORM role broadly comparable to tools such as Prisma or TypeORM in a Node.js application, although their APIs and runtime models differ.
+
+**Interview takeaway:** “JPA is the persistence specification, while Hibernate is a common implementation of it. Hibernate maps Java entities to relational tables and translates persistence operations into SQL. JDBC provides the lower-level Java database connectivity.”
+
+---
+
 ## 7. Testing and API verification
 
 **Labels:** `BASIC` → `INTERMEDIATE` · `PRODUCTION`
@@ -205,8 +323,8 @@ The expanded sequence below is the working checklist for the current learning se
 | 8 | API verification with PowerShell | Complete | Verified create, list, get, update, delete, duplicate ID, invalid name and missing-device responses. |
 | 9 | JUnit 5, Mockito and service tests | Complete | Six service tests pass. |
 | 10 | Controller tests with MockMvc | Complete | Four `@WebMvcTest` controller tests pass. |
-| 11 | Configuration, profiles, environment variables and logging | Pending | Next learning batch. |
-| 12 | PostgreSQL, JPA, Hibernate and transactions | Pending | Device persistence is currently in memory. |
+| 11 | Configuration, profiles, environment variables and logging | In progress | Created base/dev/prod property files and verified the active dev profile on port 8081. Externalised environment variables have been explained but not configured; SLF4J/Logback concepts covered and logger implementation/testing still needs verification. |
+| 12 | PostgreSQL, JPA, Hibernate and transactions | Concepts introduced | Covered in-memory vs persistent storage, JDBC, JPA as a specification, Hibernate as an implementation, ORM and Entity mapping. PostgreSQL setup, Spring Data JPA and transaction implementation remain pending. |
 | 13 | Complete persistent Device CRUD API | In progress | CRUD endpoints work; persistence migration remains. |
 | 14 | Debugging, production practices and interview review | In progress | Continue with configuration/logging, persistence and final review. |
 
@@ -277,8 +395,8 @@ The latest verified command was:
 - [x] Verify successful and failure API scenarios.
 - [x] Add service tests using JUnit 5 and Mockito.
 - [x] Add controller tests using MockMvc.
-- [ ] Configure profiles, environment variables and application logging.
-- [ ] Persist and retrieve device records using PostgreSQL and Spring Data JPA.
+- [ ] Finish and verify profiles, environment variables and application logging.
+- [ ] Set up PostgreSQL and persist/retrieve device records using Spring Data JPA.
 - [ ] Complete the remaining production/debugging and interview review.
 
 ## Day 2 working agreement
