@@ -925,6 +925,47 @@ public class DeviceService {
 
 findFirst() returns an Optional<Device> because there may be no matching device. Device::isActive is a method reference, equivalent here to device -> device.isActive().
 
+### Stream matching and counting operations
+
+Filtering a stream does not itself produce a count. It produces another Stream; a terminal operation determines the result.
+
+~~~java
+long activeCount = devices.stream()
+    .filter(Device::isActive)
+    .count();
+
+boolean hasActive = devices.stream()
+    .anyMatch(Device::isActive);
+
+boolean allActive = devices.stream()
+    .allMatch(Device::isActive);
+
+boolean noneActive = devices.stream()
+    .noneMatch(Device::isActive);
+~~~
+
+- `count()` returns the number of matching elements as a `long`.
+- `anyMatch()` returns true if at least one element matches.
+- `allMatch()` returns true if every element matches.
+- `noneMatch()` returns true if no elements match.
+- For an empty stream, allMatch() and noneMatch() return true; anyMatch() returns false.
+
+For the DeviceService exercise, distinguish `devices.size()` (all registered devices) from `devices.stream().filter(Device::isActive).count()` (active devices only).
+
+~~~java
+public int totalRegisteredDevices() {
+    return devices.size();
+}
+
+public long totalActiveDevices() {
+    return devices.stream().filter(Device::isActive).count();
+}
+
+public boolean areAllDevicesActive() {
+    return devices.stream().allMatch(Device::isActive);
+}
+~~~
+
 ### Method references — the `::` operator
 
 The `::` symbol is called the **method reference operator**. A method reference is a shorter form of a lambda when an existing method already matches the functional interface's expected input and output.
@@ -990,7 +1031,7 @@ Expected behaviour: device 102 is printed; device 103 is deactivated; the active
 2. Deactivate device 101.
 3. Find device 101 and print its name using map() and orElse().
 4. Add a method to DeviceService that returns the total number of registered devices.
-5. Explain why findById() returns Optional<Device> instead of returning null.
+5. Explain why findById() returns Optional<Device> instead of returning null.\n6. Add totalActiveDevices() using filter() and count().\n7. Add areAllDevicesActive() using allMatch(), and test it after deactivating a device.
 
 ### Progress checklist
 
@@ -999,7 +1040,7 @@ Expected behaviour: device 102 is printed; device 103 is deactivated; the active
 - [x] Enhanced for loops and map entry iteration.
 - [x] Lambda expressions and functional interfaces.
 - [x] Stream filter, map, reduce and terminal operations.
-- [x] Optional basics and safe lookup patterns.
+- [x] Optional basics and safe lookup patterns.\n- [x] Method references and Stream matching operations (anyMatch, allMatch, noneMatch).
 - [ ] Complete and run the Device domain model exercise.
 - [ ] Add SensorReading and calculate an average reading.
 - [ ] Add basic JUnit tests and review Day 1 interview questions.
