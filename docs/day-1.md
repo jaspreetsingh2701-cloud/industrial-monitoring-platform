@@ -925,6 +925,30 @@ public class DeviceService {
 
 findFirst() returns an Optional<Device> because there may be no matching device. Device::isActive is a method reference, equivalent here to device -> device.isActive().
 
+### Method references — the `::` operator
+
+The `::` symbol is called the **method reference operator**. A method reference is a shorter form of a lambda when an existing method already matches the functional interface's expected input and output.
+
+| Lambda expression | Method reference |
+|---|---|
+| `device -> device.isActive()` | `Device::isActive` |
+| `name -> System.out.println(name)` | `System.out::println` |
+| `text -> Integer.parseInt(text)` | `Integer::parseInt` |
+
+Example in a stream:
+
+~~~java
+devices.stream()
+    .filter(Device::isActive)
+    .forEach(System.out::println);
+~~~
+
+- `Device::isActive` means: for each Device supplied by the stream, call its `isActive()` method.
+- `System.out::println` means: pass each value to the existing println method.
+- The method is not called at the point where the reference is written; the stream invokes it when processing each element.
+
+Think of a method reference as a concise lambda, not as a method call.
+
 ### 3. Main.java
 
 ~~~java
