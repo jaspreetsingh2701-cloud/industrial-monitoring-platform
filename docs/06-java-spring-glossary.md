@@ -55,6 +55,9 @@ A growing, beginner-friendly dictionary of the technical terms used in the Indus
 | Constructor injection | Providing a class's required dependencies through its constructor. |
 | Component scanning | Spring's process of discovering eligible annotated classes in configured packages. |
 | Auto-configuration | Spring Boot's conditional setup of application infrastructure based on dependencies and configuration. |
+| Configuration | Settings that control how an application and its components behave, such as server port, database connection and logging level. |
+| `application.properties` | A Spring Boot configuration file commonly used to define application settings as key-value pairs. |
+| `application.yml` | A YAML-format alternative for defining Spring Boot application settings in a structured way. |
 | Starter dependency | A convenient dependency bundle that brings together commonly needed libraries for a capability. |
 | `@SpringBootApplication` | The annotation combining Spring Boot configuration, auto-configuration and component scanning. |
 | `@SpringBootConfiguration` | Marks a class as a source of Spring Boot configuration. |
