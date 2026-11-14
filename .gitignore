@@ -1,13 +1,16 @@
-﻿.vscode/
-.idea/
-*.class
+﻿# Maven
 target/
-node_modules/
-dist/
+**/target/
+
+# Compiled Java
+*.class
+out/
+
+# IDE
+.idea/
+.vscode/
+
+# Local environment
 .env
 .env.*
 !.env.example
-.DS_Store
-Thumbs.db
-
-out/
