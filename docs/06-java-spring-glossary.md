@@ -84,6 +84,29 @@ A growing, beginner-friendly dictionary of the technical terms used in the Indus
 | Java `HttpServer` | A basic HTTP server API in the JDK for lightweight HTTP handling without a full Servlet container. |
 | DispatcherServlet | Spring MVC's front controller that dispatches incoming HTTP requests to handler methods. |
 
+## Databases and persistence
+
+| Term | One-line meaning |
+|---|---|
+| PostgreSQL | An open-source relational database management system that stores structured data persistently. |
+| Relational database | A database that organises data into related tables made up of rows and columns. |
+| Table | A named structure in a relational database that stores records using defined columns. |
+| Row (record) | One stored record in a database table. |
+| Column | A named field in a database table, with a defined data type. |
+| Primary key | A column or set of columns that uniquely identifies each row in a table. |
+| Persistence | The ability to retain data beyond the lifetime of the process that created it. |
+| In-memory storage | Data held in application memory; it is normally lost when the process stops unless explicitly saved elsewhere. |
+| JDBC (Java Database Connectivity) | The standard Java API for connecting to relational databases and executing SQL. |
+| ORM (Object-Relational Mapping) | A technique for mapping objects in application code to relational database tables and rows. |
+| JPA (Jakarta Persistence) | A Java specification defining APIs and mapping rules for object-relational persistence; it is not itself an implementation or database. |
+| Hibernate ORM | A popular implementation of JPA that maps Java entities to relational data and translates persistence operations into SQL. |
+| Spring Data JPA | A Spring project that simplifies JPA-based data access by providing repository abstractions and generated implementations. |
+| Transaction | A group of database operations treated as one unit of work, with commit or rollback behaviour. |
+| `@Entity` | Marks a Java class as a persistent entity mapped to a database table. |
+| `@Table` | Specifies the database table mapped to a JPA entity. |
+| `@Id` | Marks the primary-key field or property of a JPA entity. |
+| `@Transactional` | Declares a method or class boundary where Spring should apply transaction management. |
+
 ## Web and REST APIs
 
 | Term | One-line meaning |
