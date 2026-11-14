@@ -525,10 +525,10 @@ A console application that registers devices, finds a device by ID, filters acti
 - [x] Java execution flow, first program, variables and data types taught.
 - [x] Operators, decisions and loops taught.
 - [x] Understand class, object, interface and constructor.
-- [ ] Use ArrayList, HashSet and HashMap.
-- [ ] Use Stream `filter`, `map`, `collect` and `average`.
-- [ ] Handle missing values with Optional.
-- [ ] Run the application and explain the code without simply reading it.
+- [x] Use ArrayList, HashSet and HashMap.
+- [x] Use Stream `filter`, `map`, `collect` and `average`.
+- [x] Handle missing values with Optional.
+- [x] Run the application and explain the code without simply reading it.
 
 
 ### Lesson 5 — Object-Oriented Programming (OOP)
@@ -1045,7 +1045,57 @@ Expected behaviour: device 102 is printed; device 103 is deactivated; the active
 - [ ] Add SensorReading and calculate an average reading.
 - [ ] Add basic JUnit tests and review Day 1 interview questions.
 
+
+### Optional — `orElse()` vs `orElseGet()`
+
+Both methods provide a fallback when an Optional is empty, but they differ in when the fallback is evaluated.
+
+```java
+String name = service.findById(102)
+    .map(Device::getName)
+    .orElse(getDefaultDeviceName());
+```
+
+- `orElse(value)` evaluates its argument before the method is called. Therefore, `getDefaultDeviceName()` runs even when device 102 exists and the fallback is not used.
+- `orElseGet(supplier)` accepts a Supplier and invokes it only when the Optional is empty:
+
+```java
+String name = service.findById(102)
+    .map(Device::getName)
+    .orElseGet(() -> getDefaultDeviceName());
+```
+
+If device 102 exists, both return its name, `Pipeline Pressure`. The first version also prints any message inside `getDefaultDeviceName()`; the second does not call that method.
+
+**Interview takeaway:** `orElse()` uses eager fallback evaluation; `orElseGet()` uses lazy, on-demand fallback evaluation. Prefer `orElseGet()` when creating or calculating the fallback is expensive or has side effects.
+
+JavaScript analogy: `value ?? getDefaultValue()` evaluates the function call only when the left side is nullish, similar to the lazy behaviour of `orElseGet()`.
+
 ## Notes / questions from the learner
 
 Add new questions here as they arise:
 - 
+
+
+## Day 1 verification — 14 November 2026
+
+**Status: Complete.** The Device and SensorReading domain model exercises are implemented. The project compiles with Java 21, and all eight JUnit 5 tests pass.
+
+### Unit tests
+
+- `DeviceTest`: 3 tests covering initial active state, deactivation and device name.
+- `DeviceServiceTest`: 5 tests covering registration/counting, lookup, missing lookup, active-device filtering and active-device count/inactive detection.
+
+### Formatting
+
+Spotless with Google Java Format is configured for Java sources.
+
+```powershell
+mvn spotless:apply
+mvn spotless:check
+mvn clean test
+```
+
+**Verified result:** Spotless apply succeeded, Spotless check succeeded, and Maven reported 8 tests run, 0 failures, 0 errors and 0 skipped.
+
+Note: `pom.xml` is XML, not Java; format it separately using the VS Code XML formatter.
