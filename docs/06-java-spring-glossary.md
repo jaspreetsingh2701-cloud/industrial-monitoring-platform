@@ -70,6 +70,14 @@ A growing, beginner-friendly dictionary of the technical terms used in the Indus
 | `@RestController` | Marks a controller whose handler methods write response bodies, commonly JSON. |
 | `@Bean` | Marks a method whose returned object should be registered as a Spring Bean. |
 | Embedded Tomcat | A web server that runs inside the Spring Boot application process. |
+| Servlet | A Java component that handles HTTP requests and produces HTTP responses. |
+| Servlet container | A runtime such as Tomcat that manages Servlet lifecycle and routes HTTP requests to Servlets. |
+| WAR (Web Application Archive) | A packaged Java web application that can be deployed to a compatible external Servlet container. |
+| `web.xml` | The traditional Java web application deployment descriptor used to configure Servlet mappings and other web settings. |
+| `@WebServlet` | A Servlet annotation that can declare a Servlet and its URL mapping without a `web.xml` entry. |
+| Jetty | An alternative Java web server and Servlet container that can host Java web applications. |
+| Undertow | An alternative lightweight Java web server that can be used with Spring Boot. |
+| Java `HttpServer` | A basic HTTP server API in the JDK for lightweight HTTP handling without a full Servlet container. |
 | DispatcherServlet | Spring MVC's front controller that dispatches incoming HTTP requests to handler methods. |
 
 ## Web and REST APIs
