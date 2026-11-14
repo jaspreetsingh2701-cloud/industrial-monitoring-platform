@@ -39,6 +39,56 @@ Build a working industrial monitoring prototype while learning Java, Spring Boot
 
 **When to use which:** direct `javac` commands are useful for learning and tiny standalone examples. Maven is more practical as the project grows, especially when it has multiple source files, external libraries, automated tests, plugins, and repeatable builds across developer machines and CI.
 
+## Maven and npm: the familiar comparison
+
+If you come from a React/Node.js background, think of Maven and npm as tools that solve similar project-management problems.
+
+**The quick mental model:** `pom.xml` is broadly comparable to `package.json`, and Maven is broadly comparable to npm. Both ecosystems use a project file to describe dependencies and support repeatable project workflows. They are not exact one-to-one equivalents.
+
+| Java + Maven | JavaScript + Node.js | What it means |
+|---|---|---|
+| `pom.xml` | `package.json` | Project metadata, dependencies and build configuration |
+| Maven | npm | Dependency and project-build tooling |
+| Maven dependencies | `dependencies` in `package.json` | Libraries the application needs |
+| Maven plugins | Build/test tools configured through Maven | Extend Maven's build lifecycle with compilation, testing, formatting, packaging, etc. |
+| `mvn test` | `npm test` (if a test script is defined) | Run project tests |
+| `mvn package` | A build script such as `npm run build` | Produce a distributable build artifact |
+| `~/.m2/repository` | npm's cache; project packages are commonly in `node_modules` | Where downloaded dependencies are stored |
+
+### A dependency example
+
+In a React project, you might add React to `package.json`:
+
+```json
+{
+  "dependencies": {
+    "react": "^19.0.0"
+  }
+}
+```
+
+In a Java project, you declare a library in `pom.xml`:
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+</dependencies>
+```
+
+Then `npm install` downloads Node.js packages, while Maven resolves and downloads Java dependencies when you run a Maven build (for example, `mvn compile`).
+
+### What if the project file is deleted?
+
+- Java still works: the JDK can compile and run Java code directly.
+- Existing JAR files do not become unusable. You can still reference them manually with the Java classpath.
+- But Maven loses the project's configuration: its declared dependencies, plugins, source/build settings and lifecycle configuration are no longer available from that POM.
+- Similarly, deleting `package.json` does not break JavaScript itself, but it removes the project's npm manifest, scripts and declared dependency information.
+
+**Remember:** Java is the language/runtime ecosystem; Maven is a build and dependency tool. Just as React does not require npm to exist as a language feature, Java does not require Maven to compile and run a small program. For a real multi-library application, a build tool makes dependency and build management much easier.
+
 ## Java commands — Windows PowerShell
 
 Run these from the repository root unless a command says otherwise.
