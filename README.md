@@ -18,7 +18,7 @@ Build a working industrial monitoring prototype while learning Java, Spring Boot
 | `docs/02-architecture.md` | Services, responsibilities, communication and data flow |
 | `docs/day-1.md` … `docs/day-5.md` | One-line topic guides and daily deliverables |
 | `docs/03-java-vs-javascript.md` | Java concepts mapped to JavaScript equivalents |
-| `docs/04-vscode-java-setup.md` | Windows + VS Code + Java setup |
+| `docs/04-vscode-java-setup.md` | Windows + VS Code + Java setup |\n| `docs/05-extended-backend-roadmap.md` | Days 6–18: expanded Java, Spring, microservices and interview curriculum |
 | `PROGRESS.md` | Checklist and learning log |
 
 ## Suggested repository structure
