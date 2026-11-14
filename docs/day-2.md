@@ -116,6 +116,31 @@ A section can have more than one label, for example `INTERMEDIATE` + `PRODUCTION
 
 **Practice:** Verify the Device Service endpoints and add automated tests.
 
+### JUnit vs Maven Surefire
+
+**Labels:** `BASIC` · `INTERVIEW`
+
+These tools have different responsibilities:
+
+- **JUnit 5 (JUnit Jupiter):** The testing framework used to write tests with annotations such as `@Test` and assertions such as `assertEquals()`.
+- **Maven Surefire:** A Maven plugin that discovers and launches tests during Maven's `test` lifecycle phase. It integrates Maven with the JUnit Platform.
+- **JUnit Platform:** The test execution infrastructure that allows test engines, such as JUnit Jupiter, to run tests.
+- **IDE test runner:** Tools in IDEs such as VS Code or IntelliJ can run JUnit tests directly, without invoking Maven Surefire.
+
+**Important:** JUnit does not require Surefire in every execution environment. Surefire is the usual bridge when tests are run through Maven. For example, `mvn test` invokes Surefire; clicking **Run Test** in an IDE can use the IDE's own test runner.
+
+**Maven commands:**
+
+~~~powershell
+# Run tests through Maven and Surefire.
+mvn test
+
+# Run tests and then continue through packaging.
+mvn package
+~~~
+
+**Remember:** JUnit defines and executes test logic; Surefire integrates test execution into Maven's build lifecycle.
+
 ---
 
 ## Embedded web server — Tomcat and deployment model
