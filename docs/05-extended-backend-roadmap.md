@@ -247,3 +247,15 @@ The reference syllabus is incorporated as follows. This is a mapping, not a clai
 3. **Advanced awareness first:** JVM tuning, reactive internals, custom Spring starters, service mesh, saga/outbox/CQRS, Kubernetes operations and advanced distributed locking. Deepen these through later focused projects.
 
 Do not compress all 18 days into the original 30-hour sprint. Finish the working vertical slice first, then follow this roadmap based on interview priorities and available time.
+
+
+## Tomcat and Java web runtime — interview reference
+
+For Spring MVC applications using `spring-boot-starter-web`, Spring Boot normally selects embedded Tomcat. The executable JAR contains the application and required embedded-server dependencies; running `java -jar` starts the JVM, Spring Boot and Tomcat together. `server.port` configures the listening port (default 8080 unless changed).
+
+Know the distinction between:
+- Embedded Tomcat in an executable JAR vs an externally managed Tomcat receiving a WAR.
+- Tomcat/Jetty/Undertow as Servlet-container choices vs Reactor Netty as a reactive networking runtime.
+- Application server/container vs reverse proxy/load balancer such as NGINX or Apache HTTP Server.
+
+A deployment answer should state the actual packaging, runtime/server and port for the system being discussed. Do not claim a specific server was used in a previous employer's deployment unless you know it.
