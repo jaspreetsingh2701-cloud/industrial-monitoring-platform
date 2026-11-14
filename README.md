@@ -133,3 +133,61 @@ industrial-monitoring-platform/
 - Implement a small working increment, run it, and understand it before moving on.
 - Record commands, decisions, errors and fixes in the relevant docs or `PROGRESS.md`.
 - Keep secrets, local environment files and build outputs out of Git.
+
+## From Java code to a running backend — the simple picture
+
+Imagine you want to build a house. You need tools, a plan, materials and people who know how to put everything together. A Java backend works in a similar way.
+
+### The pieces, in plain English
+
+1. **JDK — Your toolbox.** It gives you the Java compiler (`javac`) and the Java launcher (`java`). You can write, compile and run a small Java program with just the JDK.
+2. **Maven — Your project organiser.** As the project grows, you need libraries, tests and repeatable build steps. Maven downloads the libraries and runs those steps for you.
+3. **pom.xml — The instruction sheet for Maven.** It tells Maven which Java version, libraries and build plugins this project needs. For example, we will list Spring Boot and testing libraries here.
+4. **Spring Boot — The backend-building toolkit.** It gives us ready-made building blocks for web APIs, dependency injection and database access, so we don't have to build all that plumbing ourselves.
+5. **Tomcat — The front door for web requests.** In our Spring MVC application, embedded Tomcat listens for HTTP requests and passes them into Spring. We don't need to install Tomcat separately for the usual executable-JAR setup.
+6. **Our application — The business logic.** This is the code we write: register a device, find a device, store sensor readings and return API responses.
+
+### How they work together
+
+```text
+We write Java code
+       |
+       v
+JDK provides javac and java
+       |
+       v
+Maven reads pom.xml
+       |
+       +--> downloads required libraries
+       +--> compiles our Java code using the JDK
+       +--> runs tests and packages the application
+       |
+       v
+Spring Boot application starts on the JVM
+       |
+       v
+Embedded Tomcat receives HTTP requests
+       |
+       v
+Spring routes requests to our controller
+       |
+       v
+Our service logic does the actual work
+```
+
+### So, why can't we just use the JDK for everything?
+
+We can use the JDK to compile and run Java code. But the JDK alone does not manage all the extra libraries, tests, plugins and repeatable project build steps that a real application needs. Maven handles that project work.
+
+And why Spring Boot? Maven can build a project, but it doesn't provide the backend features we want. Spring Boot gives us the framework to create those features.
+
+**One-line memory trick:**
+
+- **JDK:** gives us the tools to work with Java.
+- **Maven:** manages how the project is built.
+- **pom.xml:** tells Maven what this project needs.
+- **Spring Boot:** helps us build the backend.
+- **Tomcat:** receives web requests.
+- **Our code:** solves the actual business problem.
+
+For our Industrial Monitoring Platform, we'll use Maven to bring in Spring Boot, Spring Boot to build the Device REST API, embedded Tomcat to receive HTTP requests, and our Java code to manage devices and sensor data.
