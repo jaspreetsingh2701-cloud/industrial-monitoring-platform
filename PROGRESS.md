@@ -4,7 +4,7 @@ Update this file as we complete each step. Do not mark an item complete until it
 
 ## Overall progress
 
-- [ ] Setup verified
+- [x] Setup verified — JDK 21, VS Code and Maven working
 - [ ] Day 1 complete
 - [ ] Day 2 complete
 - [ ] Day 3 complete
@@ -12,22 +12,25 @@ Update this file as we complete each step. Do not mark an item complete until it
 - [ ] Day 5 complete
 - [ ] End-to-end prototype verified
 
+**Current status:** Day 1 is nearly complete. The Device console application has been implemented, run successfully and pushed. Remaining Day 1 work: add the SensorReading model, calculate average readings with Streams, run the exercise, and review/commit the completed work.
+
 ## Daily tracker
 
 | Day | Planned focus | Status | Notes / blockers |
 |---|---|---|---|
-| Setup | JDK 21, VS Code, Maven, Git | Not started | |
-| Day 1 | Java fundamentals and device console app | Not started | |
-| Day 2 | Spring Boot REST and persistence | Not started | |
-| Day 3 | Microservices, gRPC and SSE | Not started | |
-| Day 4 | WebSocket and React dashboard | Not started | |
-| Day 5 | Security, tests, Docker and integration | Not started | |
+| Setup | JDK 21, VS Code, Maven, Git | Complete | Temurin JDK 21.0.13 and Maven 3.6.3 verified on Java 21 |
+| Day 1 | Java fundamentals and device console app | In progress — nearly complete | Covered Java syntax, OOP, collections, lambdas, Streams, Optional, static/final, immutability, StringBuilder/StringBuffer. Device and DeviceService implemented; lookup, active-device filtering and aggregate operations run successfully. Next: SensorReading + average temperature exercise |
+| Day 2 | Spring Boot REST and persistence | Not started | Build on the Day 1 domain model |
+| Day 3 | Microservices, gRPC and SSE | Not started | Separate services and service-owned data |
+| Day 4 | WebSocket and React dashboard | Not started | Real-time telemetry integration |
+| Day 5 | Security, tests, Docker and integration | Not started | End-to-end prototype verification |
 
 ## Decisions and notes
 
 | Date | Decision / learning | Reason |
 |---|---|---|
-| | | |
+| 2026-11-14 | Keep the original five-day sprint as the immediate priority | Complete the practical project before moving to the extended backend curriculum |
+| 2026-11-14 | Use StringBuilder for independent per-thread string construction; StringBuffer only when a mutable buffer is shared across threads and synchronized methods are appropriate | Thread count alone does not require StringBuffer; shared mutable state is the key distinction |
 
 ## Blocker log
 
