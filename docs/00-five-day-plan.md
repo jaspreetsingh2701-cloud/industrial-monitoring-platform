@@ -83,3 +83,28 @@ By the end of Day 5, aim to:
 - Explain REST vs gRPC vs SSE vs WebSocket and choose appropriately.
 - Show a React dashboard consuming backend data and live updates.
 - Run the core components locally and explain how they would be containerised.
+
+
+---
+
+## Extended interview and backend curriculum (Days 6–18)
+
+The first five days remain the focused prototype sprint. The attached three-phase interview syllabus contains additional material that cannot realistically be mastered inside those 30 hours. Continue with the sequenced extension in [docs/05-extended-backend-roadmap.md](05-extended-backend-roadmap.md).
+
+| Extension | Focus |
+|---|---|
+| Day 6 | Core Java interview essentials and coding patterns |
+| Day 7 | Collections internals, generics and advanced Streams |
+| Day 8 | Concurrency, threads and asynchronous Java |
+| Day 9 | JVM internals, memory and performance diagnostics |
+| Day 10 | Spring Core and Spring Boot deeper concepts |
+| Day 11 | JPA, Hibernate and SQL |
+| Day 12 | Spring Security and JWT |
+| Day 13 | Microservices architecture and resilience |
+| Day 14 | Kafka, messaging, caching and data fundamentals |
+| Day 15 | Advanced Spring, transactions, AOP and reactive programming |
+| Day 16 | Distributed systems patterns and advanced API design |
+| Day 17 | Testing, Docker, CI/CD, cloud and observability |
+| Day 18 | Design patterns, system design and behavioral interview practice |
+
+Each extension day is a learning block, not a claim of mastery. Prioritise hands-on implementation for core topics and interview-level conceptual understanding for advanced infrastructure topics.
