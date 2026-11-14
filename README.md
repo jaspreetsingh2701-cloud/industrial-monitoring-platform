@@ -352,3 +352,47 @@ And why Spring Boot? Maven can build a project, but it doesn't provide the backe
 - **Our code:** solves the actual business problem.
 
 For our Industrial Monitoring Platform, we'll use Maven to bring in Spring Boot, Spring Boot to build the Device REST API, embedded Tomcat to receive HTTP requests, and our Java code to manage devices and sensor data.
+
+
+## Device Service shortcuts — PowerShell
+
+**BASIC | REAL USE CASE**
+
+Long Maven commands are useful to understand what is happening, but typing them repeatedly is inconvenient. We use a small PowerShell script as a shortcut, similar in purpose to an npm script such as `npm run dev`.
+
+The script is stored at:
+
+```text
+scripts/
+└── device.ps1
+```
+
+Run these commands from the repository root in Windows PowerShell:
+
+| Shortcut | What it does |
+|---|---|
+| `.\scripts\device.ps1 compile` | Runs Maven `clean compile` for the Device Service |
+| `.\scripts\device.ps1 run` | Starts the Device Service using the Spring Boot Maven Plugin |
+| `.\scripts\device.ps1 test` | Runs Maven `clean test` for the Device Service |
+| `.\scripts\device.ps1 package` | Runs Maven `clean package` for the Device Service |
+| `.\scripts\device.ps1 clean` | Removes the Device Service build output |
+| `.\scripts\device.ps1` | Starts the Device Service; `run` is the default task |
+
+The script selects the shared services POM (`services/pom.xml`) and the `device-service` module, so you do not need to repeat those Maven arguments each time. It also resolves the repository root from the script's own location, then restores the terminal's original directory after the command finishes.
+
+### What the script does under the hood
+
+- `param(...)` accepts the requested task and restricts it to the supported task names.
+- `$PSScriptRoot` identifies the folder containing the script; this lets the script locate the repository even if PowerShell was opened in another directory.
+- `$MavenArgs` stores the common Maven project-selection arguments.
+- `switch` chooses the Maven goal(s) for the requested task.
+- `Push-Location` and `Pop-Location` temporarily change and then restore the working directory.
+- `$LASTEXITCODE` checks whether Maven completed successfully; a non-zero exit code is reported as a failure.
+
+If PowerShell blocks script execution, you can allow scripts for the current PowerShell process only (this does not change the machine-wide policy):
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Important:** The PowerShell file is only a convenient wrapper. Maven still performs the compilation, tests and packaging, and the Spring Boot Maven Plugin still starts the Java application. We can add similar scripts for the Telemetry Service and frontend as those parts of the project are implemented.
