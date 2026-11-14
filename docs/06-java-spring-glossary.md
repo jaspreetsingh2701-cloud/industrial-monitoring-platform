@@ -113,6 +113,33 @@ A growing, beginner-friendly dictionary of the technical terms used in the Indus
 | Local variable | A variable declared inside a method invocation, separate for each invocation. |
 | Race condition | A bug where the result depends on the timing or interleaving of concurrent operations. |
 
+## Spring MVC testing and API implementation
+
+| Term | One-line meaning |
+|---|---|
+| MockMvc | Spring's test utility for sending simulated HTTP requests through the MVC layer without starting a real web server. |
+| `@WebMvcTest` | A Spring Boot test-slice annotation that loads focused MVC/controller infrastructure rather than the full application. |
+| `@MockitoBean` | Registers a Mockito mock in the Spring test ApplicationContext to replace a real Bean dependency. |
+| Mockito | A Java mocking framework used to create test doubles and verify interactions with dependencies. |
+| Mock | A test double whose behaviour can be configured and whose interactions can be verified. |
+| Test slice | A focused test ApplicationContext that loads only a selected part of the application, such as MVC or JPA. |
+| `@SpringBootTest` | Loads the full Spring Boot application context for integration-style tests. |
+| Arrange–Act–Assert (AAA) | A test structure: prepare inputs/dependencies, execute the operation, then assert the result and relevant interactions. |
+| `ResponseEntity` | A Spring type for controlling an HTTP response's status, headers and body. |
+| `@RestControllerAdvice` | A global component for handling exceptions raised by REST controllers. |
+| `@Valid` | Triggers validation of an annotated request object when supported validation is configured. |
+| `@NotBlank` | A validation constraint requiring a character sequence to contain at least one non-whitespace character. |
+| `@Positive` | A validation constraint requiring a numeric value to be greater than zero; null is valid unless another constraint rejects it. |
+| 400 Bad Request | HTTP status indicating the server cannot process the request because of invalid client input. |
+| 404 Not Found | HTTP status indicating that the requested resource was not found. |
+| 409 Conflict | HTTP status indicating that the request conflicts with the current state of the resource, such as a duplicate device ID. |
+| 201 Created | HTTP status indicating that the request successfully created a resource. |
+| 204 No Content | HTTP status indicating successful processing with no response body. |
+| SLF4J | A logging facade that lets application code use a consistent logging API with a chosen logging implementation. |
+| Logback | A logging implementation commonly used by Spring Boot behind the SLF4J API. |
+| Application profile | A named configuration set, such as `dev` or `prod`, used to activate environment-specific settings. |
+| Externalised configuration | Keeping environment-dependent settings outside application code, commonly in config files, environment variables or a secret manager. |
+
 ## Add to this glossary
 
 When a new term appears in a lesson, add a concise definition here and link to a deeper explanation when appropriate. Keep definitions short; use the daily guides for full examples, implementation steps and interview notes.
