@@ -21,3 +21,14 @@ A documented, locally runnable prototype with core tests and an architecture wal
 - [ ] Start the local stack using documented commands.
 - [ ] Explain the complete data flow and the role of each protocol.
 - [ ] List what remains before production readiness.
+
+
+## Deployment runtime and container boundary
+
+For our Spring Boot services, the expected local deployment model is an executable JAR with embedded Tomcat (for Spring MVC / `spring-boot-starter-web`). In Docker, the JAR and its JVM run inside the service container; embedded Tomcat listens on the container's configured application port. Docker port publishing maps a host port to that container port.
+
+A reverse proxy such as NGINX can be placed in front of services for routing or TLS termination, but it is not the Spring Servlet container.
+
+- [ ] Explain the process boundary: JVM + Spring Boot + embedded Tomcat.
+- [ ] Identify the application listening port and Docker host-to-container port mapping.
+- [ ] Explain when an external Tomcat/WAR deployment is used.
