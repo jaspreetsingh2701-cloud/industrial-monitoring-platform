@@ -1,3 +1,198 @@
+# Industrial Monitoring Platform
+
+A hands-on full-stack learning project to build an industrial monitoring prototype with Java, Spring Boot, PostgreSQL, microservices, and a React dashboard.
+
+> **Project objective:** Learn by building. Each topic moves through understanding, implementation, testing, and documentation.
+
+---
+
+## 🛰️ Project overview
+
+The platform is planned around device management and sensor telemetry, with a web dashboard for monitoring.
+
+- Device registration and management through REST APIs.
+- Sensor telemetry ingestion and processing.
+- Persistent data storage with PostgreSQL.
+- Service communication using REST and gRPC/Protocol Buffers.
+- Real-time updates using WebSockets or Server-Sent Events.
+- A React and TypeScript dashboard with data visualisation.
+
+**Learning sprint:** 5 days × 6 hours/day = 30 focused hours. The target is a working prototype and interview-ready fundamentals—not production-grade mastery of distributed systems.
+
+## 🧱 Technology stack
+
+| Area | Technology |
+|---|---|
+| Frontend | React, TypeScript, Vite |
+| UI state and charts | Redux Toolkit, ECharts |
+| Backend | Java 21, Spring Boot |
+| APIs | Spring MVC, REST |
+| Database | PostgreSQL, Spring Data JPA, Hibernate |
+| Service communication | REST, gRPC, Protocol Buffers |
+| Real-time delivery | WebSockets / SSE |
+| Testing | JUnit 5, Mockito, React Testing Library |
+| Build | Maven |
+| Local infrastructure | Docker, Docker Compose |
+
+## 🔌 Architecture
+
+The platform is organised into independently buildable services and a separate dashboard.
+
+```text
+              React + TypeScript Dashboard
+                         |
+                  REST / live updates
+                         |
+              +----------+----------+
+              |                     |
+       Device Service        Telemetry Service
+       Java + Spring         Java + Spring
+              |                     |
+          PostgreSQL            PostgreSQL
+```
+
+Each service owns its data and persistence boundary. Services communicate through APIs and contracts rather than sharing application source classes or directly accessing another service's database.
+
+See the [architecture guide](docs/02-architecture.md) for the detailed design and data flows.
+
+## 🚦 Getting started
+
+### Prerequisites
+
+- Java 21 (Temurin or another compatible JDK)
+- Maven
+- Docker Desktop
+- Node.js 20+ and npm (for the dashboard)
+
+### Clone the repository
+
+```powershell
+git clone https://github.com/jaspreetsingh2701-cloud/industrial-monitoring-platform.git
+cd industrial-monitoring-platform
+```
+
+### Start the PostgreSQL container
+
+The Industrial Monitoring database uses PostgreSQL 17 Alpine. Host port **5433** is mapped to PostgreSQL's container port **5432**, allowing another local PostgreSQL instance to use port 5432.
+
+```powershell
+# Start PostgreSQL with a persistent named volume.
+docker run --name industrial-postgres `
+  -e POSTGRES_USER=monitoring `
+  -e POSTGRES_PASSWORD=CHANGE_ME_LOCAL_PASSWORD `
+  -e POSTGRES_DB=industrial_monitoring `
+  -p 5433:5432 `
+  -v industrial-postgres-data:/var/lib/postgresql/data `
+  -d postgres:17-alpine
+```
+
+| Connection setting | Value |
+|---|---|
+| Host | `localhost` |
+| Host port | `5433` |
+| Database | `industrial_monitoring` |
+| Username | `monitoring` |
+| Password | The local password supplied when creating the container |
+
+Replace the example password with your own local development password. Do not commit real credentials.
+
+Useful container commands:
+
+```powershell
+# Check running containers.
+docker ps
+
+# Stop the database container.
+docker stop industrial-postgres
+
+# Start the existing container again.
+docker start industrial-postgres
+
+# Open a PostgreSQL prompt inside the container.
+docker exec -it industrial-postgres psql -U monitoring -d industrial_monitoring
+```
+
+The named Docker volume keeps database files separate from the image and container lifecycle. Removing the container does not remove the volume unless the volume is explicitly deleted.
+
+### Run the Device Service
+
+From the repository root:
+
+```powershell
+# Start the Device Service using the project shortcut.
+.\scripts\device.ps1 run
+```
+
+The shortcut supports `compile`, `run`, `test`, `package`, and `clean`.
+
+## ⌨️ Command reference
+
+| Command | Purpose |
+|---|---|
+| `mvn compile` | Compile configured Java source files |
+| `mvn test` | Run the tests |
+| `mvn clean test` | Clean, compile, and run tests |
+| `mvn package` | Build the configured package |
+| `mvn spotless:apply` | Format Java source with Spotless |
+| `mvn spotless:check` | Verify Java formatting |
+| `.\scripts\device.ps1 run` | Start the Device Service |
+| `.\scripts\device.ps1 test` | Run Device Service tests |
+
+Recommended pre-commit checks:
+
+```powershell
+mvn spotless:apply
+mvn spotless:check
+mvn clean test
+```
+
+## 🗂️ Documentation
+
+| Document | Purpose |
+|---|---|
+| [Five-day plan](docs/00-five-day-plan.md) | Day-by-day schedule and six-hour time blocks |
+| [Project overview](docs/01-project-overview.md) | Goals, features, scope, and outcomes |
+| [Architecture](docs/02-architecture.md) | Services, responsibilities, communication, and data flow |
+| [Day 1–5 guides](docs/day-1.md) · [Day 2](docs/day-2.md) · [Day 3](docs/day-3.md) · [Day 4](docs/day-4.md) · [Day 5](docs/day-5.md) | Daily topics, exercises, and deliverables |
+| [Day 1 best practices](docs/day-1-best-practices.md) | Problem, solution, and best-practice notes |
+| [Java vs JavaScript](docs/03-java-vs-javascript.md) | Java concepts mapped to JavaScript |
+| [Java setup](docs/04-vscode-java-setup.md) | Windows, VS Code, and Java setup |
+| [Extended backend roadmap](docs/05-extended-backend-roadmap.md) | Days 6–18: expanded backend curriculum |
+| [Java & Spring glossary](docs/06-java-spring-glossary.md) | Quick definitions of Java and backend terms |
+| [Progress tracker](PROGRESS.md) | Learning status, checklist, and next steps |
+
+Learning notes use these labels: `BASIC` · `INTERMEDIATE` · `ADVANCED` · `INTERVIEW` · `PRODUCTION` · `REAL USE CASE`.
+
+## 📍 Current implementation status
+
+**Device Service — Day 2**
+
+- Spring Boot CRUD endpoints are implemented.
+- Request DTO validation and centralised API error responses are in place.
+- Service and controller tests have been added.
+- Latest verified test run: **10 passing tests** (6 service tests and 4 MockMvc controller tests).
+- Device records are currently held in memory; PostgreSQL/JPA integration is a next persistence milestone.
+
+PostgreSQL is running locally in Docker, but the Device Service is not yet wired to it. See the [Day 2 guide](docs/day-2.md) and [progress tracker](PROGRESS.md) for implementation details and next steps.
+
+## 🔁 Learning workflow
+
+1. Understand the concept and why the technology is used.
+2. Implement a small working increment.
+3. Run and test it before moving forward.
+4. Review the result and understand the trade-offs.
+5. Document commands, decisions, errors, and fixes.
+
+Keep services independently buildable and deployable. Keep secrets, local environment files, and build outputs out of Git.
+
+---
+
+## 📚 Existing README content — preserved
+
+The original README material is retained below. The project overview above adds a clearer entry point; the original learning explanations, examples, commands, and notes remain available in their original wording.
+
+---
+
 # Industrial Monitoring Platform — Learning Sprint
 
 This repository is both a hands-on full-stack project and a structured five-day learning sprint.
