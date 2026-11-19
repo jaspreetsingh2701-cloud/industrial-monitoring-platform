@@ -159,6 +159,7 @@ mvn clean test
 | [Java setup](docs/04-vscode-java-setup.md) | Windows, VS Code, and Java setup |
 | [Extended backend roadmap](docs/05-extended-backend-roadmap.md) | Days 6–18: expanded backend curriculum |
 | [Java & Spring glossary](docs/06-java-spring-glossary.md) | Quick definitions of Java and backend terms |
+| [PostgreSQL learning guide](docs/07-postgresql-learning-guide.md) | Docker setup, connection validation, psql commands, and SQL examples |
 | [Progress tracker](PROGRESS.md) | Learning status, checklist, and next steps |
 
 Learning notes use these labels: `BASIC` · `INTERMEDIATE` · `ADVANCED` · `INTERVIEW` · `PRODUCTION` · `REAL USE CASE`.
