@@ -108,7 +108,7 @@ A section can have more than one label, for example `INTERMEDIATE` + `PRODUCTION
 
 **Labels:** `BASIC` · `INTERMEDIATE` · `INTERVIEW` · `REAL USE CASE`
 
-This section records the concepts introduced before installing or configuring PostgreSQL. The concepts are covered; database setup and implementation are still pending.
+This section records the concepts introduced before connecting the Device Service to PostgreSQL. PostgreSQL is running locally in Docker; application connectivity and JPA-backed persistence are the next implementation steps.
 
 #### In-memory collection vs relational database
 
