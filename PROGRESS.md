@@ -20,7 +20,7 @@ Update this file as we complete each step. Do not mark an item complete until it
 |---|---|---|---|
 | Setup | JDK 21, VS Code, Maven, Git | Complete | Temurin JDK 21.0.13 and Maven 3.6.3 verified on Java 21. |
 | Day 1 | Java fundamentals and device console app | Complete | Device and SensorReading implemented; Java 21 compilation succeeds; Spotless apply/check succeed; 8 JUnit tests pass (0 failures/errors). |
-| Day 2 | Spring Boot REST and persistence | In progress — ~65% | Spring DI/Beans/startup covered; Device Service CRUD endpoints, DTO validation and global exception handling verified; 6 Mockito service tests + 4 MockMvc controller tests pass. Base/dev/prod property files created and dev profile verified on port 8081. SLF4J/Logback and PostgreSQL/JPA foundations covered; logger/test verification, environment-variable setup and PostgreSQL/JPA persistence remain. |
+| Day 2 | Spring Boot REST and persistence | In progress — ~65% | Spring DI/Beans/startup covered; Device Service CRUD endpoints, DTO validation and global exception handling verified; 6 Mockito service tests + 4 MockMvc controller tests pass. Common/dev/test/prod property files created; dev profile configuration now targets Docker PostgreSQL on port 5433. Database connection verification is pending. SLF4J/Logback and PostgreSQL/JPA foundations covered; logger/test verification, environment-variable setup and PostgreSQL/JPA persistence remain. |
 | Day 3 | Microservices, gRPC and SSE | Not started | Separate services and service-owned data. |
 | Day 4 | WebSocket and React dashboard | Not started | Real-time telemetry integration. |
 | Day 5 | Security, tests, Docker and integration | Not started | End-to-end prototype verification. |
