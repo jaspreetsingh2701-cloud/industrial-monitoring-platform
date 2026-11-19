@@ -1,72 +1,61 @@
-# 🏭 Industrial Monitoring Platform
+# Industrial Monitoring Platform
 
-A hands-on full-stack project and structured learning sprint to build an industrial monitoring prototype while developing practical Java, Spring Boot, microservices, database, and frontend skills.
+A hands-on full-stack learning project to build an industrial monitoring prototype with Java, Spring Boot, PostgreSQL, microservices, and a React dashboard.
 
-> **🎯 Learning goal:** Build a working prototype and become comfortable with backend fundamentals through implementation, testing, and documentation—not just theory.
->
-> **⏱️ Core sprint:** 5 days × 6 hours/day = 30 focused hours. The five-day target is an interview-ready prototype and foundation, not production-grade mastery of distributed systems.
+> **Project objective:** Learn by building. Each topic moves through understanding, implementation, testing, and documentation.
 
 ---
 
-## ✨ What we're building
+## 🛰️ Project overview
 
-An industrial monitoring platform for registering devices and working with sensor telemetry.
+The platform is planned around device management and sensor telemetry, with a web dashboard for monitoring.
 
-- **Device management:** REST APIs to create, retrieve, update, and delete devices.
-- **Telemetry foundation:** A separate service for sensor readings and telemetry workflows.
-- **Data persistence:** PostgreSQL-backed storage.
-- **Service communication:** Explore REST and gRPC/Protobuf.
-- **Live updates:** Real-time telemetry delivery using WebSockets or SSE.
-- **Monitoring dashboard:** React + TypeScript UI with charts and device status.
+- Device registration and management through REST APIs.
+- Sensor telemetry ingestion and processing.
+- Persistent data storage with PostgreSQL.
+- Service communication using REST and gRPC/Protocol Buffers.
+- Real-time updates using WebSockets or Server-Sent Events.
+- A React and TypeScript dashboard with data visualisation.
 
-The repository is also the learning workspace: each topic is studied, implemented, tested, and documented as the project evolves.
+**Learning sprint:** 5 days × 6 hours/day = 30 focused hours. The target is a working prototype and interview-ready fundamentals—not production-grade mastery of distributed systems.
 
-## 🧰 Technology stack
+## 🧱 Technology stack
 
 | Area | Technology |
 |---|---|
 | Frontend | React, TypeScript, Vite |
-| UI state and visualisation | Redux Toolkit, ECharts |
+| UI state and charts | Redux Toolkit, ECharts |
 | Backend | Java 21, Spring Boot |
 | APIs | Spring MVC, REST |
-| Data | PostgreSQL, Spring Data JPA, Hibernate |
+| Database | PostgreSQL, Spring Data JPA, Hibernate |
 | Service communication | REST, gRPC, Protocol Buffers |
 | Real-time delivery | WebSockets / SSE |
-| Tests | JUnit 5, Mockito, React Testing Library |
+| Testing | JUnit 5, Mockito, React Testing Library |
 | Build | Maven |
 | Local infrastructure | Docker, Docker Compose |
 
----
+## 🔌 Architecture
 
-## 🏗️ Architecture at a glance
-
-The platform is organised around independently buildable services and a separate dashboard.
+The platform is organised into independently buildable services and a separate dashboard.
 
 ```text
-                 ┌─────────────────────────────┐
-                 │     React + TypeScript      │
-                 │       Monitoring UI        │
-                 └──────────────┬──────────────┘
-                                │ REST / live updates
-                 ┌──────────────┴──────────────┐
-                 │                             │
-       ┌─────────▼──────────┐        ┌─────────▼──────────┐
-       │   Device Service  │        │  Telemetry Service │
-       │   Java + Spring   │        │   Java + Spring    │
-       └─────────┬─────────┘        └─────────┬──────────┘
-                 │                             │
-       ┌─────────▼─────────┐        ┌─────────▼──────────┐
-       │    PostgreSQL     │        │    PostgreSQL     │
-       └───────────────────┘        └────────────────────┘
+              React + TypeScript Dashboard
+                         |
+                  REST / live updates
+                         |
+              +----------+----------+
+              |                     |
+       Device Service        Telemetry Service
+       Java + Spring         Java + Spring
+              |                     |
+          PostgreSQL            PostgreSQL
 ```
 
-**Design principle:** Each service owns its data and persistence boundary. Services communicate through APIs/contracts rather than sharing application source classes or directly accessing another service's database.
+Each service owns its data and persistence boundary. Services communicate through APIs and contracts rather than sharing application source classes or directly accessing another service's database.
 
-See [Architecture](docs/02-architecture.md) for the detailed design and data flows.
+See the [architecture guide](docs/02-architecture.md) for the detailed design and data flows.
 
----
-
-## 🚀 Getting started
+## 🚦 Getting started
 
 ### Prerequisites
 
@@ -82,24 +71,22 @@ git clone https://github.com/jaspreetsingh2701-cloud/industrial-monitoring-platf
 cd industrial-monitoring-platform
 ```
 
-### Start PostgreSQL with Docker
+### Start the PostgreSQL container
 
-The local Industrial Monitoring database uses the PostgreSQL 17 Alpine image, mapped to host port **5433** to avoid conflicts with other local PostgreSQL instances.
+The Industrial Monitoring database uses PostgreSQL 17 Alpine. Host port **5433** is mapped to PostgreSQL's container port **5432**, allowing another local PostgreSQL instance to use port 5432.
 
 ```powershell
-# Start the database container with a persistent Docker volume.
+# Start PostgreSQL with a persistent named volume.
 docker run --name industrial-postgres `
   -e POSTGRES_USER=monitoring `
-  -e POSTGRES_PASSWORD=local_dev_password `
+  -e POSTGRES_PASSWORD=CHANGE_ME_LOCAL_PASSWORD `
   -e POSTGRES_DB=industrial_monitoring `
   -p 5433:5432 `
   -v industrial-postgres-data:/var/lib/postgresql/data `
   -d postgres:17-alpine
 ```
 
-Connection settings for local development:
-
-| Setting | Value |
+| Connection setting | Value |
 |---|---|
 | Host | `localhost` |
 | Host port | `5433` |
@@ -107,9 +94,9 @@ Connection settings for local development:
 | Username | `monitoring` |
 | Password | The local password supplied when creating the container |
 
-> **🔐 Local development only:** Replace the example password for your own environment. Never commit real credentials. The container stores database files in the named volume `industrial-postgres-data`, separately from the image and container lifecycle.
+Replace the example password with your own local development password. Do not commit real credentials.
 
-Useful Docker commands:
+Useful container commands:
 
 ```powershell
 # Check running containers.
@@ -118,12 +105,14 @@ docker ps
 # Stop the database container.
 docker stop industrial-postgres
 
-# Start the existing database container again.
+# Start the existing container again.
 docker start industrial-postgres
 
 # Open a PostgreSQL prompt inside the container.
 docker exec -it industrial-postgres psql -U monitoring -d industrial_monitoring
 ```
+
+The named Docker volume keeps database files separate from the image and container lifecycle. Removing the container does not remove the volume unless the volume is explicitly deleted.
 
 ### Run the Device Service
 
@@ -134,13 +123,9 @@ From the repository root:
 .\scripts\device.ps1 run
 ```
 
-The shortcut supports `compile`, `run`, `test`, `package`, and `clean`. See the [PowerShell command reference](#-command-reference) below.
+The shortcut supports `compile`, `run`, `test`, `package`, and `clean`.
 
----
-
-## 🧪 Command reference
-
-Run Maven commands from the repository root unless noted otherwise.
+## ⌨️ Command reference
 
 | Command | Purpose |
 |---|---|
@@ -150,17 +135,8 @@ Run Maven commands from the repository root unless noted otherwise.
 | `mvn package` | Build the configured package |
 | `mvn spotless:apply` | Format Java source with Spotless |
 | `mvn spotless:check` | Verify Java formatting |
-
-### Device Service shortcuts — PowerShell
-
-| Shortcut | What it does |
-|---|---|
-| `.\scripts\device.ps1 compile` | Runs Maven `clean compile` for the Device Service |
-| `.\scripts\device.ps1 run` | Starts the Device Service using the Spring Boot Maven Plugin |
-| `.\scripts\device.ps1 test` | Runs Maven `clean test` for the Device Service |
-| `.\scripts\device.ps1 package` | Runs Maven `clean package` for the Device Service |
-| `.\scripts\device.ps1 clean` | Removes the Device Service build output |
-| `.\scripts\device.ps1` | Starts the Device Service; `run` is the default task |
+| `.\scripts\device.ps1 run` | Start the Device Service |
+| `.\scripts\device.ps1 test` | Run Device Service tests |
 
 Recommended pre-commit checks:
 
@@ -170,95 +146,78 @@ mvn spotless:check
 mvn clean test
 ```
 
----
+## 🗂️ Documentation
 
-## 📚 Documentation map
-
-| Document | What you'll find |
+| Document | Purpose |
 |---|---|
-| [Five-day plan](docs/00-five-day-plan.md) | Day-by-day schedule with six-hour time blocks |
-| [Project overview](docs/01-project-overview.md) | Goals, features, scope, and expected outcomes |
+| [Five-day plan](docs/00-five-day-plan.md) | Day-by-day schedule and six-hour time blocks |
+| [Project overview](docs/01-project-overview.md) | Goals, features, scope, and outcomes |
 | [Architecture](docs/02-architecture.md) | Services, responsibilities, communication, and data flow |
-| [Day 1–5 guides](docs/day-1.md) · [Day 2](docs/day-2.md) · [Day 3](docs/day-3.md) · [Day 4](docs/day-4.md) · [Day 5](docs/day-5.md) | Daily topics, learning labels, exercises, and deliverables |
-| [Day 1 best practices](docs/day-1-best-practices.md) | Problem/solution/best-practice notes |
-| [Java vs JavaScript](docs/03-java-vs-javascript.md) | Java concepts mapped to familiar JavaScript equivalents |
+| [Day 1–5 guides](docs/day-1.md) · [Day 2](docs/day-2.md) · [Day 3](docs/day-3.md) · [Day 4](docs/day-4.md) · [Day 5](docs/day-5.md) | Daily topics, exercises, and deliverables |
+| [Day 1 best practices](docs/day-1-best-practices.md) | Problem, solution, and best-practice notes |
+| [Java vs JavaScript](docs/03-java-vs-javascript.md) | Java concepts mapped to JavaScript |
 | [Java setup](docs/04-vscode-java-setup.md) | Windows, VS Code, and Java setup |
-| [Extended backend roadmap](docs/05-extended-backend-roadmap.md) | Days 6–18: expanded Java, Spring, microservices, and interview curriculum |
-| [Java & Spring glossary](docs/06-java-spring-glossary.md) | Quick one-line definitions, updated as new terms are introduced |
-| [Progress tracker](PROGRESS.md) | Completion checklist, current learning status, and next steps |
+| [Extended backend roadmap](docs/05-extended-backend-roadmap.md) | Days 6–18: expanded backend curriculum |
+| [Java & Spring glossary](docs/06-java-spring-glossary.md) | Quick definitions of Java and backend terms |
+| [Progress tracker](PROGRESS.md) | Learning status, checklist, and next steps |
 
-Daily learning notes use these labels to make the purpose and depth of each topic clear:
+Learning notes use these labels: `BASIC` · `INTERMEDIATE` · `ADVANCED` · `INTERVIEW` · `PRODUCTION` · `REAL USE CASE`.
 
-`BASIC` · `INTERMEDIATE` · `ADVANCED` · `INTERVIEW` · `PRODUCTION` · `REAL USE CASE`
+## 📍 Current implementation status
 
----
+**Device Service — Day 2**
 
-## 📍 Current implementation snapshot
+- Spring Boot CRUD endpoints are implemented.
+- Request DTO validation and centralised API error responses are in place.
+- Service and controller tests have been added.
+- Latest verified test run: **10 passing tests** (6 service tests and 4 MockMvc controller tests).
+- Device records are currently held in memory; PostgreSQL/JPA integration is a next persistence milestone.
 
-### Day 2 — Device Service
+PostgreSQL is running locally in Docker, but the Device Service is not yet wired to it. See the [Day 2 guide](docs/day-2.md) and [progress tracker](PROGRESS.md) for implementation details and next steps.
 
-The Spring Boot Device Service currently exposes device CRUD endpoints, validates request DTOs, centralises API error responses, and has separate service/controller tests.
+## 🔁 Learning workflow
 
-- **Latest verified test run:** 10 passing tests (6 service tests and 4 MockMvc controller tests).
-- **Current storage:** In-memory repository; data resets when the application restarts.
-- **Next persistence milestone:** Connect PostgreSQL and implement JPA-backed storage.
+1. Understand the concept and why the technology is used.
+2. Implement a small working increment.
+3. Run and test it before moving forward.
+4. Review the result and understand the trade-offs.
+5. Document commands, decisions, errors, and fixes.
 
-For implementation details, verified endpoints, and the learning sequence, see the [Day 2 guide](docs/day-2.md). For the overall status and next steps, see [PROGRESS.md](PROGRESS.md).
-
-> **Status note:** PostgreSQL has been started locally in Docker for this project. The Device Service's repository implementation is still in-memory until the persistence work is completed and verified. Do not assume database persistence is already wired into the API.
-
----
-
-## 🧭 Learning workflow
-
-1. **Understand** the concept and why the technology is used.
-2. **Implement** a small working increment.
-3. **Run and test** it before moving to the next topic.
-4. **Review** the result and understand the trade-offs.
-5. **Document** commands, decisions, errors, and fixes in the relevant guide or `PROGRESS.md`.
-
-Follow one day at a time. The goal is to understand and build each layer, not simply to produce code quickly.
+Keep services independently buildable and deployable. Keep secrets, local environment files, and build outputs out of Git.
 
 ---
 
-## 📁 Intended repository structure
+## 📚 Existing README content — preserved
 
-```text
-industrial-monitoring-platform/
-├── apps/
-│   └── dashboard/                 # React + TypeScript + Vite
-├── services/
-│   ├── device-service/            # Java + Spring Boot
-│   └── telemetry-service/         # Java + Spring Boot
-├── contracts/
-│   └── telemetry.proto            # gRPC contract
-├── infrastructure/
-│   └── docker-compose.yml
-├── docs/
-│   └── ...                        # Learning and project documentation
-├── PROGRESS.md
-└── README.md
-```
-
-This is the intended platform layout; some components are still planned and will be added during the sprint.
+The original README material is retained below. The project overview above adds a clearer entry point; the original learning explanations, examples, commands, and notes remain available in their original wording.
 
 ---
 
-## 🤝 Working agreement
+# Industrial Monitoring Platform — Learning Sprint
 
-- Keep secrets, local environment files, and build outputs out of Git.
-- Make small, understandable changes and verify them before moving on.
-- Keep each microservice independently buildable and deployable.
-- Update the learning guide and progress tracker as implementation changes.
-- Treat the five-day sprint as a focused prototype and learning milestone.
+This repository is both a hands-on full-stack project and a structured five-day learning sprint.
 
----
+## Goal
+Build a working industrial monitoring prototype while learning Java, Spring Boot, microservices, service communication, real-time data delivery, and frontend integration.
 
-# 📖 Java learning reference
+**Time budget:** 5 days × 6 hours/day = 30 focused hours.
 
-The sections below preserve the original Java/Maven learning notes and command explanations from this README. They remain here as a reference while the project overview above provides a quicker starting point.
+**Important:** The five-day target is a working prototype and interview-ready fundamentals. It is not intended to represent production-grade mastery of Java or distributed systems.
 
----
+## Documentation map
+
+| File | Purpose |
+|---|---|
+| `docs/00-five-day-plan.md` | Day-by-day schedule with six-hour time blocks |
+| `docs/01-project-overview.md` | What we are building, features, scope and outcomes |
+| `docs/02-architecture.md` | Services, responsibilities, communication and data flow |
+| `docs/day-1.md` … `docs/day-5.md` | Daily topics, learning labels and deliverables |
+| `docs/day-1-best-practices.md` | Short problem/solution/best-practice notes from Day 1 |
+| `docs/03-java-vs-javascript.md` | Java concepts mapped to JavaScript equivalents |
+| `docs/04-vscode-java-setup.md` | Windows + VS Code + Java setup |
+| `docs/05-extended-backend-roadmap.md` | Days 6–18: expanded Java, Spring, microservices and interview curriculum |
+| `docs/06-java-spring-glossary.md` | One-line definitions of Java, Maven, Spring Boot, REST and backend terms; updated throughout the sprint |
+| `PROGRESS.md` | Checklist and learning log |
 
 ## Java compilation: JDK vs Maven
 
@@ -504,6 +463,43 @@ mvn clean test
 
 Commit only after formatting and tests succeed.
 
+## Suggested repository structure
+
+```text
+industrial-monitoring-platform/
+├── apps/
+│   └── dashboard/                 # React + TypeScript + Vite
+├── services/
+│   ├── device-service/            # Java + Spring Boot
+│   └── telemetry-service/         # Java + Spring Boot
+├── contracts/
+│   └── telemetry.proto            # gRPC contract
+├── infrastructure/
+│   └── docker-compose.yml
+├── docs/
+│   └── ...                        # These learning/project documents
+├── PROGRESS.md
+└── README.md
+```
+
+## Current implementation snapshot
+
+**Day 2 — Device Service:** The Spring Boot service currently exposes device CRUD endpoints, validates request DTOs, centralises API error responses and has separate service/controller tests. The latest verified test run reported **10 passing tests** (6 service tests and 4 MockMvc controller tests).
+
+- Implementation guide and verified endpoint/test details: [Day 2 guide](docs/day-2.md)
+- Current learning status and next steps: [Progress tracker](PROGRESS.md)
+- Short definitions for Spring, REST and testing terms: [Java & Spring glossary](docs/06-java-spring-glossary.md)
+
+**Current limitation:** Device records are stored in memory. PostgreSQL and Spring Data JPA persistence, environment profiles and production logging are still pending; do not treat the service as database-persistent yet.
+
+## Working agreement
+
+- Follow one day at a time; do not jump ahead just to create more code.
+- At the start of each day, review its guide and prerequisites.
+- Implement a small working increment, run it, and understand it before moving on.
+- Record commands, decisions, errors and fixes in the relevant docs or `PROGRESS.md`.
+- Keep secrets, local environment files and build outputs out of Git.
+
 ## From Java code to a running backend — the simple picture
 
 Imagine you want to build a house. You need tools, a plan, materials and people who know how to put everything together. A Java backend works in a similar way.
@@ -561,3 +557,47 @@ And why Spring Boot? Maven can build a project, but it doesn't provide the backe
 - **Our code:** solves the actual business problem.
 
 For our Industrial Monitoring Platform, we'll use Maven to bring in Spring Boot, Spring Boot to build the Device REST API, embedded Tomcat to receive HTTP requests, and our Java code to manage devices and sensor data.
+
+
+## Device Service shortcuts — PowerShell
+
+**BASIC | REAL USE CASE**
+
+Long Maven commands are useful to understand what is happening, but typing them repeatedly is inconvenient. We use a small PowerShell script as a shortcut, similar in purpose to an npm script such as `npm run dev`.
+
+The script is stored at:
+
+```text
+scripts/
+└── device.ps1
+```
+
+Run these commands from the repository root in Windows PowerShell:
+
+| Shortcut | What it does |
+|---|---|
+| `.\scripts\device.ps1 compile` | Runs Maven `clean compile` for the Device Service |
+| `.\scripts\device.ps1 run` | Starts the Device Service using the Spring Boot Maven Plugin |
+| `.\scripts\device.ps1 test` | Runs Maven `clean test` for the Device Service |
+| `.\scripts\device.ps1 package` | Runs Maven `clean package` for the Device Service |
+| `.\scripts\device.ps1 clean` | Removes the Device Service build output |
+| `.\scripts\device.ps1` | Starts the Device Service; `run` is the default task |
+
+The script selects the shared services POM (`services/pom.xml`) and the `device-service` module, so you do not need to repeat those Maven arguments each time. It also resolves the repository root from the script's own location, then restores the terminal's original directory after the command finishes.
+
+### What the script does under the hood
+
+- `param(...)` accepts the requested task and restricts it to the supported task names.
+- `$PSScriptRoot` identifies the folder containing the script; this lets the script locate the repository even if PowerShell was opened in another directory.
+- `$MavenArgs` stores the common Maven project-selection arguments.
+- `switch` chooses the Maven goal(s) for the requested task.
+- `Push-Location` and `Pop-Location` temporarily change and then restore the working directory.
+- `$LASTEXITCODE` checks whether Maven completed successfully; a non-zero exit code is reported as a failure.
+
+If PowerShell blocks script execution, you can allow scripts for the current PowerShell process only (this does not change the machine-wide policy):
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+**Important:** The PowerShell file is only a convenient wrapper. Maven still performs the compilation, tests and packaging, and the Spring Boot Maven Plugin still starts the Java application. We can add similar scripts for the Telemetry Service and frontend as those parts of the project are implemented.
