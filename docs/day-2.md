@@ -108,7 +108,7 @@ A section can have more than one label, for example `INTERMEDIATE` + `PRODUCTION
 
 **Labels:** `BASIC` · `INTERMEDIATE` · `INTERVIEW` · `REAL USE CASE`
 
-This section records the concepts introduced before installing or configuring PostgreSQL. The concepts are covered; database setup and implementation are still pending.
+This section records the concepts introduced before connecting the Device Service to PostgreSQL. PostgreSQL is running locally in Docker; application connectivity and JPA-backed persistence are the next implementation steps.
 
 #### In-memory collection vs relational database
 
@@ -323,7 +323,7 @@ The expanded sequence below is the working checklist for the current learning se
 | 8 | API verification with PowerShell | Complete | Verified create, list, get, update, delete, duplicate ID, invalid name and missing-device responses. |
 | 9 | JUnit 5, Mockito and service tests | Complete | Six service tests pass. |
 | 10 | Controller tests with MockMvc | Complete | Four `@WebMvcTest` controller tests pass. |
-| 11 | Configuration, profiles, environment variables and logging | In progress | Created base/dev/prod property files and verified the active dev profile on port 8081. Externalised environment variables have been explained but not configured; SLF4J/Logback concepts covered and logger implementation/testing still needs verification. |
+| 11 | Configuration, profiles, environment variables and logging | In progress | Separated common, dev, test and prod properties. Dev uses Docker PostgreSQL on localhost:5433; test uses a separate database; prod requires external credentials. Profile startup and database connectivity still need verification. |
 | 12 | PostgreSQL, JPA, Hibernate and transactions | Concepts introduced | Covered in-memory vs persistent storage, JDBC, JPA as a specification, Hibernate as an implementation, ORM and Entity mapping. PostgreSQL setup, Spring Data JPA and transaction implementation remain pending. |
 | 13 | Complete persistent Device CRUD API | In progress | CRUD endpoints work; persistence migration remains. |
 | 14 | Debugging, production practices and interview review | In progress | Continue with configuration/logging, persistence and final review. |
@@ -410,3 +410,50 @@ For each topic, follow this sequence:
 5. **Document:** update this file and `PROGRESS.md` as milestones are verified.
 
 We will cover the five-day sprint first. Advanced topics from the extended roadmap remain separate so they don't distract from completing this working service.
+
+
+---
+
+## Application configuration and profiles
+
+**Labels:** `BASIC` · `INTERMEDIATE` · `PRODUCTION`
+
+Spring Boot loads `application.properties` for common settings. When a profile is active, it also loads the matching file and lets profile-specific values override common values.
+
+| File | Purpose |
+|---|---|
+| `application.properties` | Shared application settings, including the application name and JPA open-in-view setting |
+| `application-dev.properties` | Local development on port 8081 and the Docker PostgreSQL database |
+| `application-test.properties` | Test configuration on port 8082 and a separate test database |
+| `application-prod.properties` | Production port 8080 and externally supplied database credentials |
+
+### Activate a profile
+
+```powershell
+# Use the local development profile in this PowerShell session.
+$env:SPRING_PROFILES_ACTIVE = "dev"
+
+# Supply the password used when creating the local PostgreSQL container.
+$env:DB_PASSWORD = "<your local Docker PostgreSQL password>"
+
+# Start the Device Service.
+.\scripts\device.ps1 run
+```
+
+### Database settings by profile
+
+- **Dev:** Defaults to `localhost:5433/industrial_monitoring`, username `monitoring`. The password comes from `DB_PASSWORD`. Hibernate uses `ddl-auto=update` for local learning.
+- **Test:** Defaults to `localhost:5433/industrial_monitoring_test`. Create this separate database before activating the test profile. Set `TEST_DB_PASSWORD`. Hibernate uses `create-drop` for this disposable test schema.
+- **Prod:** Requires `DB_URL`, `DB_USERNAME` and `DB_PASSWORD`. Hibernate uses `validate`; production schema changes must be handled by migrations.
+
+The current Mockito and MockMvc tests do not activate the test profile or connect to PostgreSQL. A separate database-backed integration test will be added when persistence is implemented.
+
+**Important:** Never commit real database passwords. Environment variables set in PowerShell apply only to that PowerShell session.
+
+### Configuration verification checklist
+
+- [ ] Start the Device Service with the `dev` profile and confirm it connects to Docker PostgreSQL.
+- [ ] Create the separate `industrial_monitoring_test` database.
+- [ ] Verify the `test` profile against that database.
+- [ ] Supply production settings through the deployment environment.
+- [ ] Replace Hibernate schema updates with Flyway migrations before production use.
